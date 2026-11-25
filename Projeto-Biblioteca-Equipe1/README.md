@@ -42,9 +42,19 @@ Navegador (HTML + CSS + JS)  ⇄  API REST C++17 (cpp-httplib + nlohmann/json)  
 
 | Tela | Arquivo | O que faz |
 |---|---|---|
-| **Livros** | [`public/index.html`](public/index.html) + [`public/config.js`](public/config.js) | Listagem com nome do autor, busca, filtro por autor, formulário criar/editar com `<select>` dinâmico e destaque visual (`linha-alerta`) para livros com `0` exemplares. |
-| **Autores** | [`public/autores.html`](public/autores.html) + [`public/config-autores.js`](public/config-autores.js) | Cadastro, edição, busca e exclusão de autores com exibição de total de títulos e exemplares. |
+| **Livros** | [`public/index.html`](public/index.html) + [`public/config.js`](public/config.js) | Listagem com nome do autor, busca, filtro por autor, botão **`+ Novo livro`** abrindo modal criar/editar com `<select>` dinâmico e destaque visual (`linha-alerta`) para livros com `0` exemplares. |
+| **Autores** | [`public/autores.html`](public/autores.html) + [`public/config-autores.js`](public/config-autores.js) | Cadastro em modal (`+ Novo autor`), edição, busca e exclusão de autores com exibição de total de títulos e exemplares. |
 | **Resumo** | [`public/resumo.html`](public/resumo.html) + [`public/resumo.js`](public/resumo.js) | Cartões de indicadores gerais e barras proporcionais por gênero e por autor consumindo `GET /api/livros/resumo`. |
+
+### Capturas de Tela
+
+| Acervo de Livros (`index.html`) | Modal de Novo Registro (`index.html`) |
+|---|---|
+| ![Tela de Livros](public/Captura%20de%20Tela%20%2846%29.png) | ![Modal de Novo Registro](public/Captura%20de%20Tela%20%2849%29.png) |
+
+| Autores Cadastrados (`autores.html`) | Resumo do Acervo (`resumo.html`) |
+|---|---|
+| ![Tela de Autores](public/Captura%20de%20Tela%20%2847%29.png) | ![Tela de Resumo](public/Captura%20de%20Tela%20%2848%29.png) |
 
 ---
 
@@ -149,7 +159,7 @@ curl -X POST http://localhost:8080/api/livros \
 curl -X POST http://localhost:8080/api/livros \
   -H "Content-Type: application/json" \
   -d '{"titulo":"Outro","autor_id":1,"isbn":"9788535910663"}'
-# {"erro":"Ja existe um registro com este valor unico"}
+# {"erro":"Ja existe um livro cadastrado com este ISBN."}
 
 # 6. Criar dois livros sem ISBN -> ambos retornam 201 (NULLIF grava NULL)
 curl -X POST http://localhost:8080/api/livros -d '{"titulo":"Sem ISBN 1","autor_id":1}'
@@ -161,7 +171,7 @@ curl http://localhost:8080/api/livros/abc    # {"erro":"Id invalido"}
 
 # 8. Apagar autor que possui livros -> 409 Conflict
 curl -X DELETE http://localhost:8080/api/autores/1
-# {"erro":"Operacao bloqueada por registros relacionados"}
+# {"erro":"Nao e possivel excluir este autor porque ele ainda possui livros cadastrados. Exclua ou transfira os livros primeiro."}
 
 # 9. Resumo do acervo -> 200 OK
 curl http://localhost:8080/api/livros/resumo
@@ -219,14 +229,15 @@ Projeto-Biblioteca-Equipe1/
 │   └── rotas_livros.hpp/.cpp
 └── public/
     ├── favicon.svg               ícone SVG do título/aba do navegador
-    ├── index.html                tela principal de livros
-    ├── autores.html              tela de autores
+    ├── index.html                tela principal de livros + modal de cadastro
+    ├── autores.html              tela de autores + modal de cadastro
     ├── resumo.html               painel de resumo do acervo
     ├── config.js                 configuração da tela de livros
     ├── config-autores.js         configuração da tela de autores
-    ├── app.js                    CRUD genérico
+    ├── app.js                    CRUD genérico + controle do modal
     ├── resumo.js                 carregamento do painel de resumo
-    └── estilo.css                estilos responsivos
+    ├── estilo.css                design system responsivo
+    └── Captura de Tela (46..49).png  capturas de tela das interfaces
 ```
 
 ---
