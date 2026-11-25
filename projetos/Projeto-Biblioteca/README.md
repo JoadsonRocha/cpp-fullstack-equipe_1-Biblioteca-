@@ -1,5 +1,7 @@
 # Projeto Final — Biblioteca
 
+> 🎤 **Apresentação da equipe:** consulte o roteiro completo (divisão para 4 integrantes, demonstração ao vivo, mapa das rotas e respostas para a banca) em **[APRESENTACAO.md](APRESENTACAO.md)**.
+
 Sistema full stack para cadastro e controle de acervo de **livros** e **autores**, com API REST em C++17, banco de dados MariaDB e front-end em HTML, CSS e JavaScript puro.
 
 ```
@@ -165,6 +167,8 @@ autores (1) ───────< (N) livros
 
 ```
 Projeto-Biblioteca/
+├── APRESENTACAO.md               roteiro da apresentação e perguntas da banca
+├── README.md                     documentação principal do projeto
 ├── Dockerfile                    build multi-stage da API C++17 para Docker
 ├── .dockerignore                 ignora binários locais no contexto Docker
 ├── docker-compose.yml            MariaDB + perfil fullstack (db + api) + adminer
