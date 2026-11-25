@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resumo - Biblioteca</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <h1>Biblioteca — Resumo do Acervo</h1>
+    <p class="sub">Indicadores calculados pela API em <code>GET /api/livros/resumo</code></p>
+    <nav class="menu" aria-label="Telas do sistema">
+      <a href="index.html">Livros</a>
+      <a href="autores.html">Autores</a>
+      <a href="resumo.html" aria-current="page">Resumo</a>
+    </nav>
+  </header>
+
+  <main class="conteudo">
+    <p id="aviso" class="aviso" role="status" hidden></p>
+
+    <section class="cartao">
+      <h2>Visão geral</h2>
+      <div id="indicadores" class="indicadores"></div>
+    </section>
+
+    <section class="cartao">
+      <h2>Livros por gênero</h2>
+      <div id="generos"></div>
+    </section>
+
+    <section class="cartao">
+      <h2>Acervo por autor</h2>
+      <div id="autores"></div>
+    </section>
+  </main>
+
+  <script src="resumo.js"></script>
+</body>
+</html>

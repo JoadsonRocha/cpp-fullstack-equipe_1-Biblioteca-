@@ -1,89 +1,90 @@
 # Equipe
 
-> **Preencha este arquivo no dia 5 (o que for possível) e mantenha-o atualizado até o dia 9.** Apague as linhas de instrução (as que começam com `>`) quando terminar.
-
 ## Identificação
 
 | Campo | Preencher |
 |-------|-----------|
-| Nome da equipe | |
-| Tema (📚 Biblioteca · 🐾 Clínica Pet · 🛒 Estoque de Loja) | |
-| Nome do projeto | |
-| Link da cópia da equipe no GitHub | |
+| Nome da equipe | Equipe 1 |
+| Tema (📚 Biblioteca · 🐾 Clínica Pet · 🛒 Estoque de Loja) | 📚 Biblioteca |
+| Nome do projeto | Sistema de Biblioteca (Livros e Autores) |
+| Link da cópia da equipe no GitHub | <https://github.com/JoadsonRocha/cpp-fullstack-equipe_1-Biblioteca-> |
 | Tag de entrega | `projeto-final` |
 
 ## Integrantes
 
-> Use o **mesmo nome de usuário** com o qual cada pessoa faz os *commits*.
-
 | Nome | Usuário no GitHub | Papel principal (pode revezar) |
 |------|-------------------|--------------------------------|
-| | | |
-| | | |
-| | | |
-| | | |
+| Joadson Rocha | `JoadsonRocha` | [Preencher papel] |
+| [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
+| [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
+| [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 
 ## Como executar (do zero, em outro computador)
 
-> O professor vai seguir exatamente estes passos. Testem em um computador que não seja o de vocês, ou refaçam tudo numa pasta nova.
-
-1. **Requisitos:** (compilador g++, biblioteca do MariaDB, Docker Desktop… com versões, se souberem)
-2. **Banco:** (como subir o banco com `docker compose`, e como zerá-lo quando o `schema.sql` mudar)
-3. **Compilar:** (comando exato)
-4. **Executar:** (comando exato, e em qual pasta)
-5. **Acessar:** (endereço no navegador)
+1. **Requisitos:** `g++` com suporte a C++17 (MSYS2 UCRT64 no Windows), `libmariadb` (`pacman -S mingw-w64-ucrt-x86_64-libmariadbclient`) e Docker Desktop aberto.
+2. **Banco:** na pasta `projetos/projeto-equipe`, rodar `docker compose up -d --wait`. Para recriar do zero após editar `schema.sql`, rodar `docker compose down -v` e `docker compose up -d --wait`.
+3. **Compilar:** `./build.sh` no MSYS2 UCRT64 (ou `build.bat` no `cmd`).
+4. **Executar:** na pasta `projetos/projeto-equipe`, rodar `./build/servidor.exe` (ou `build\servidor.exe`).
+5. **Acessar:** <http://localhost:8080>
 
 ## Rotas da API
 
-> Uma linha por rota. Se houver exemplos de corpo JSON, coloquem no README da equipe.
-
 | Método | Caminho | O que faz | Status possíveis |
 |--------|---------|-----------|------------------|
-| GET | `/api/...` | | 200 |
-| | | | |
+| GET | `/api/saude` · `/api/saude/banco` | Saúde da API e conexão com MariaDB | 200 · 500 |
+| GET | `/api/autores` | Lista autores (aceita `?busca=`) | 200 |
+| GET | `/api/autores/:id` | Busca um autor por ID | 200 · 400 · 404 |
+| GET | `/api/autores/:id/livros` | Lista os livros do autor | 200 · 400 · 404 |
+| POST | `/api/autores` | Cria um autor | 201 · 400 · 409 · 422 |
+| PUT | `/api/autores/:id` | Atualiza um autor | 200 · 400 · 404 · 409 · 422 |
+| DELETE | `/api/autores/:id` | Remove um autor (bloqueia se tiver livros) | 204 · 400 · 404 · 409 |
+| GET | `/api/livros` | Lista livros (`?busca=`, `?genero=`, `?autor_id=`) | 200 · 422 |
+| GET | `/api/livros/resumo` | Estatísticas do acervo | 200 |
+| GET | `/api/livros/:id` | Busca um livro por ID | 200 · 400 · 404 |
+| POST | `/api/livros` | Cria um livro | 201 · 400 · 409 · 422 |
+| PUT | `/api/livros/:id` | Atualiza um livro | 200 · 400 · 404 · 409 · 422 |
+| DELETE | `/api/livros/:id` | Remove um livro | 204 · 400 · 404 |
 
 ## Banco de dados
 
-> Liste as tabelas, as chaves e as regras. Um desenho simples (mesmo à mão, fotografado) ou um diagrama em texto serve.
-
 | Tabela | Colunas principais | Relacionamentos / regras |
 |--------|--------------------|--------------------------|
-| | | |
+| `autores` | `id`, `nome`, `nacionalidade`, `criado_em` | `nome` obrigatório e `UNIQUE` |
+| `livros` | `id`, `titulo`, `autor_id`, `genero`, `ano_publicacao`, `isbn`, `exemplares`, `criado_em` | `autor_id` → `autores.id` (FK `ON DELETE RESTRICT`); `isbn` `UNIQUE` opcional via `NULLIF(?, '')`; `CHECK` em `ano_publicacao` (1000–2100) e `exemplares` (≥ 0) |
+
+```
+autores (1) ───────< (N) livros
+```
 
 ## Divisão de tarefas
 
-> Atualizem ao longo dos dias. A ideia é revezar: cada pessoa deve ter mexido em banco, API e front.
-
 | Dia | Quem | O que foi feito |
 |-----|------|-----------------|
-| 6 | | |
-| 7 | | |
-| 8 | | |
-| 9 | | |
+| 6 | [Preencher] | Configuração do ambiente e leitura do starter kit |
+| 7 | [Preencher] | Modelagem do `schema.sql` e criação das rotas iniciais |
+| 8 | [Preencher] | CRUD completo de livros e autores + telas front-end |
+| 9 | [Preencher] | Extras (resumo, filtros), testes e documentação |
 
 ## Decisões e dificuldades
 
-> Duas ou três decisões de projeto que vocês tomaram (e por quê) e um problema que deu trabalho e como foi resolvido. Isso ajuda muito na apresentação.
-
--
--
+- **Uso de `NULLIF(?, '')` para campos opcionais (especialmente `isbn` e `ano_publicacao`):** como a classe `Conexao` envia os parâmetros como texto, strings vazias impediriam cadastrar mais de um livro sem ISBN devido à restrição `UNIQUE`. Com `NULLIF(?, '')`, o banco grava `NULL` real.
+- **Validação prévia de `autor_id` nas rotas de livros:** antes de inserir ou atualizar um livro, a API verifica se o autor existe e responde `422` com `"autor_id nao existe"`, evitando um `409` genérico de violação de chave estrangeira.
+- **Registro de `/api/livros/resumo` antes de `/api/livros/:id`:** evita que a palavra `"resumo"` seja interpretada como parâmetro `:id` e gere erro `400`.
 
 ## Extras implementados
 
-> Marque o que fizeram (além dos obrigatórios).
-
-- [ ] Busca / filtro
-- [ ] Rota de resumo ou relatório
+- [x] Busca / filtro (`?busca=`, `?genero=`, `?autor_id=`)
+- [x] Rota de resumo ou relatório (`GET /api/livros/resumo` + `resumo.html`)
 - [ ] Paginação ou ordenação
-- [ ] Validações extras no front-end
-- [ ] Outro:
+- [x] Validações extras no front-end
+- [x] Outro: listagem de livros por autor (`GET /api/autores/:id/livros`), bloqueio `409` ao excluir autor com livros e destaque visual na tabela para livros com `exemplares = 0`
 
 ## Checklist de entrega (dia 9)
 
-- [ ] O projeto compila sem avisos (`-Wall -Wextra`)
-- [ ] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo
-- [ ] Todo SQL usa parâmetros `?`
-- [ ] CRUD completo funciona pela tela
+- [ ] O projeto compila sem avisos (`-Wall -Wextra`) *(testar no ambiente com g++ + libmariadb)*
+- [ ] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo *(testar no Docker)*
+- [x] Todo SQL usa parâmetros `?`
+- [ ] CRUD completo funciona pela tela *(validar após subir banco e servidor)*
 - [ ] O README da equipe foi testado em outro computador
 - [ ] Todos os integrantes têm *commits* no próprio usuário
 - [ ] A tag `projeto-final` foi criada e enviada (`git push origin projeto-final`) e o link foi entregue ao professor
