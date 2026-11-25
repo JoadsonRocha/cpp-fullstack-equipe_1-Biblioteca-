@@ -6,7 +6,7 @@
 |-------|-----------|
 | Nome da equipe | Equipe 1 |
 | Tema (📚 Biblioteca · 🐾 Clínica Pet · 🛒 Estoque de Loja) | 📚 Biblioteca |
-| Nome do projeto | Projeto-Biblioteca (`Projeto-Biblioteca/` na raiz do repositório) |
+| Nome do projeto | Projeto-Biblioteca-Equipe1 (`Projeto-Biblioteca-Equipe1/` na raiz do repositório) |
 | Link da cópia da equipe no GitHub | <https://github.com/JoadsonRocha/cpp-fullstack-equipe_1-Biblioteca-> |
 | Tag de entrega | `projeto-final` |
 
@@ -15,16 +15,16 @@
 | Nome | Usuário no GitHub | Papel principal (pode revezar) |
 |------|-------------------|--------------------------------|
 | Joadson Rocha | `JoadsonRocha` | [Preencher papel] |
-| [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
+| Eduardo Felipe | `[Preencher usuário]` | [Preencher papel] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 
 ## Como executar (do zero, em outro computador)
 
 1. **Requisitos:** `g++` com suporte a C++17 (MSYS2 UCRT64 no Windows), `libmariadb` (`pacman -S mingw-w64-ucrt-x86_64-libmariadbclient`) e Docker Desktop aberto.
-2. **Banco:** na pasta `Projeto-Biblioteca`, rodar `docker compose up -d --wait` (ou `docker compose --profile fullstack up -d --build --wait` para subir banco + API em containers). Para recriar do zero após editar `schema.sql`, rodar `docker compose down -v` e subir novamente.
+2. **Banco:** na pasta `Projeto-Biblioteca-Equipe1`, rodar `docker compose up -d --wait` (ou `docker compose --profile fullstack up -d --build --wait` para subir banco + API em containers). Para recriar do zero após editar `schema.sql`, rodar `docker compose down -v` e subir novamente.
 3. **Compilar:** `./build.sh` no MSYS2 UCRT64 (ou `build.bat` no `cmd`).
-4. **Executar:** na pasta `Projeto-Biblioteca`, rodar `./build/servidor.exe` (ou `build\servidor.exe`).
+4. **Executar:** na pasta `Projeto-Biblioteca-Equipe1`, rodar `./build/servidor.exe` (ou `build\servidor.exe`).
 5. **Acessar:** <http://localhost:8080>
 
 ## Rotas da API
