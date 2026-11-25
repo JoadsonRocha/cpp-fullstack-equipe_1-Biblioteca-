@@ -1,6 +1,8 @@
 # C++ Full Stack — ITEAM (2º semestre)
 Ambiente de aprendizado de pequenos desafios utilizando a linguagem de programação C++.
 
+> 📚 **Projeto Final da Equipe (Biblioteca):** acesse diretamente em **[`Projeto-Biblioteca/`](Projeto-Biblioteca/)** · [Documentação e rotas](Projeto-Biblioteca/README.md) · [Roteiro da apresentação](Projeto-Biblioteca/APRESENTACAO.md) · [Dados da equipe](projetos/EQUIPE.md)
+
 **Curso de Capacitação em Desenvolvimento Full Stack – ITEAM · Módulo 08 – Linguagem de Programação C++**
 Professor: Msc. Hygo Sousa De Oliveira
 

@@ -23,8 +23,8 @@ Navegador (public/*.html + app.js)  ⇄  API em C++17 (cpp-httplib + nlohmann/js
 
 ## Como executar (do zero, em outro computador)
 
-1. **Requisitos:** `g++` com suporte a C++17 (MSYS2 UCRT64 no Windows), biblioteca cliente do MariaDB (`libmariadb`) e Docker Desktop aberto (ou MariaDB local). Passo a passo completo em [`../guia/01-preparar-ambiente.md`](../guia/01-preparar-ambiente.md).
-2. **Subir com Docker** (na pasta `projetos/Projeto-Biblioteca`):
+1. **Requisitos:** `g++` com suporte a C++17 (MSYS2 UCRT64 no Windows), biblioteca cliente do MariaDB (`libmariadb`) e Docker Desktop aberto (ou MariaDB local). Passo a passo completo em [`../projetos/guia/01-preparar-ambiente.md`](../projetos/guia/01-preparar-ambiente.md).
+2. **Subir com Docker** (na pasta `Projeto-Biblioteca`):
 
    - **Modo 1 — Só o banco MariaDB** (padrão do curso, para compilar e rodar o servidor C++ localmente):
      ```bash
@@ -46,10 +46,10 @@ Navegador (public/*.html + app.js)  ⇄  API em C++17 (cpp-httplib + nlohmann/js
 
    > Só um serviço MariaDB por vez pode usar a porta `3306`. Se outro projeto (`starter-kit` ou `demo`) ou um MariaDB local estiver usando a porta, pare-o antes.
 
-3. **Compilar localmente (Modo 1)** (na pasta `projetos/Projeto-Biblioteca`):
+3. **Compilar localmente (Modo 1)** (na pasta `Projeto-Biblioteca`):
    - Terminal do **MSYS2 UCRT64**: `./build.sh`
    - **`cmd` / PowerShell** (com `C:\msys64\ucrt64\bin` no `PATH`): `build.bat`
-4. **Executar localmente (Modo 1)** (dentro de `projetos/Projeto-Biblioteca`, para o servidor encontrar `./public`):
+4. **Executar localmente (Modo 1)** (dentro de `Projeto-Biblioteca`, para o servidor encontrar `./public`):
    - MSYS2/Linux: `./build/servidor.exe` (ou `./build.sh rodar`)
    - Windows `cmd` / PowerShell: `build\servidor.exe`
 5. **Acessar no navegador:** <http://localhost:8080>
