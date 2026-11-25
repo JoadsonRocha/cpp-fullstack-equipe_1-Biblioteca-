@@ -80,8 +80,9 @@ int main(int argc, char* argv[]) {
         }
     });
 
-    std::cout << "Servidor em http://localhost:" << config.portaServidor << "  (Ctrl+C para parar)" << std::endl;
-    if (!servidor.listen("127.0.0.1", config.portaServidor)) {
+    std::cout << "Servidor em http://localhost:" << config.portaServidor << " (bind " << config.hostServidor
+              << ")  (Ctrl+C para parar)" << std::endl;
+    if (!servidor.listen(config.hostServidor, config.portaServidor)) {
         std::cerr << "ERRO: nao foi possivel usar a porta " << config.portaServidor
                   << ". Ja existe outro servidor rodando? Tente: servidor.exe 8081\n";
         return 1;

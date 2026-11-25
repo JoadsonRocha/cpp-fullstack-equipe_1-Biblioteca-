@@ -6,7 +6,7 @@
 |-------|-----------|
 | Nome da equipe | Equipe 1 |
 | Tema (📚 Biblioteca · 🐾 Clínica Pet · 🛒 Estoque de Loja) | 📚 Biblioteca |
-| Nome do projeto | Sistema de Biblioteca (Livros e Autores) |
+| Nome do projeto | Projeto-Biblioteca (`projetos/Projeto-Biblioteca`) |
 | Link da cópia da equipe no GitHub | <https://github.com/JoadsonRocha/cpp-fullstack-equipe_1-Biblioteca-> |
 | Tag de entrega | `projeto-final` |
 
@@ -22,9 +22,9 @@
 ## Como executar (do zero, em outro computador)
 
 1. **Requisitos:** `g++` com suporte a C++17 (MSYS2 UCRT64 no Windows), `libmariadb` (`pacman -S mingw-w64-ucrt-x86_64-libmariadbclient`) e Docker Desktop aberto.
-2. **Banco:** na pasta `projetos/projeto-equipe`, rodar `docker compose up -d --wait`. Para recriar do zero após editar `schema.sql`, rodar `docker compose down -v` e `docker compose up -d --wait`.
+2. **Banco:** na pasta `projetos/Projeto-Biblioteca`, rodar `docker compose up -d --wait` (ou `docker compose --profile fullstack up -d --build --wait` para subir banco + API em containers). Para recriar do zero após editar `schema.sql`, rodar `docker compose down -v` e subir novamente.
 3. **Compilar:** `./build.sh` no MSYS2 UCRT64 (ou `build.bat` no `cmd`).
-4. **Executar:** na pasta `projetos/projeto-equipe`, rodar `./build/servidor.exe` (ou `build\servidor.exe`).
+4. **Executar:** na pasta `projetos/Projeto-Biblioteca`, rodar `./build/servidor.exe` (ou `build\servidor.exe`).
 5. **Acessar:** <http://localhost:8080>
 
 ## Rotas da API
@@ -81,7 +81,7 @@ autores (1) ───────< (N) livros
 
 ## Checklist de entrega (dia 9)
 
-- [ ] O projeto compila sem avisos (`-Wall -Wextra`) *(testar no ambiente com g++ + libmariadb)*
+- [x] O projeto compila sem avisos (`-Wall -Wextra`)
 - [ ] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo *(testar no Docker)*
 - [x] Todo SQL usa parâmetros `?`
 - [ ] CRUD completo funciona pela tela *(validar após subir banco e servidor)*

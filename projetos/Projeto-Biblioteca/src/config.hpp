@@ -17,6 +17,7 @@ struct Config {
     std::string senha{"iteam123"};
     std::string banco{"projeto_iteam"};
 
+    std::string hostServidor{"127.0.0.1"};
     int portaServidor{8080};
 
     static Config doAmbiente() {
@@ -26,6 +27,7 @@ struct Config {
         c.usuario = lerTexto("DB_USUARIO", c.usuario);
         c.senha = lerTexto("DB_SENHA", c.senha);
         c.banco = lerTexto("DB_NOME", c.banco);
+        c.hostServidor = lerTexto("HOST", c.hostServidor);
         c.portaServidor = lerNumero("PORTA", c.portaServidor);
         return c;
     }

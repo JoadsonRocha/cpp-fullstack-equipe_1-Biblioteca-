@@ -13,3 +13,4 @@
 #include "config.hpp"
 
 void registrarRotasAutores(httplib::Server& servidor, const Config& config);
+

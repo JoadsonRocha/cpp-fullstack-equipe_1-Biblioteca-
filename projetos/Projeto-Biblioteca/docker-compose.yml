@@ -1,0 +1,69 @@
+# docker-compose.yml - Banco de dados MariaDB e execução opcional completa em Docker.
+#
+# Modos de uso (rode na pasta Projeto-Biblioteca):
+#   1) Só o banco (padrão do curso, para rodar o servidor C++ localmente):
+#      docker compose up -d --wait
+#
+#   2) Stack completa em containers (MariaDB + API em C++ + Front-end):
+#      docker compose --profile fullstack up -d --build --wait
+#
+#   3) Administração visual do banco (Adminer em http://localhost:8081):
+#      docker compose --profile admin up -d
+#
+# Outros comandos úteis:
+#   docker compose ps        mostra o status dos serviços
+#   docker compose down      remove os containers (os dados continuam no volume)
+#   docker compose down -v   apaga o volume para executar o schema.sql do zero no próximo "up"
+
+services:
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: projeto_iteam
+      MARIADB_USER: iteam
+      MARIADB_PASSWORD: iteam123
+      TZ: America/Manaus
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    ports:
+      - "127.0.0.1:${DB_PORTA:-3306}:3306"
+    volumes:
+      - dados-mariadb:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -h127.0.0.1 -u$$MARIADB_USER -p$$MARIADB_PASSWORD $$MARIADB_DATABASE -e 'SELECT 1' > /dev/null 2>&1"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 5s
+
+  api:
+    build: .
+    profiles: ["fullstack"]
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORTA: 3306
+      DB_USUARIO: iteam
+      DB_SENHA: iteam123
+      DB_NOME: projeto_iteam
+      HOST: 0.0.0.0
+      PORTA: 8080
+    ports:
+      - "127.0.0.1:${PORTA:-8080}:8080"
+
+  adminer:
+    image: adminer:latest
+    profiles: ["admin"]
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8081:8080"
+
+volumes:
+  dados-mariadb:
