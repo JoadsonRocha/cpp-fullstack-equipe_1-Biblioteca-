@@ -1,6 +1,7 @@
 "use strict";
 /*
- * resumo.js - Busca GET /api/livros/resumo e exibe indicadores gerais e distribuição por gênero/autor.
+ * resumo.js - Consome GET /api/livros/resumo e renderiza indicadores e barras do acervo.
+ * Usa textContent na criação dos elementos para evitar injeção de HTML (XSS).
  */
 
 const elementos = {
@@ -16,6 +17,7 @@ function mostrarErro(texto) {
   elementos.aviso.hidden = false;
 }
 
+// Monta um cartão numérico do painel superior (ex.: "10" / "Títulos cadastrados").
 function criarIndicador(valor, rotulo, classeExtra) {
   const caixa = document.createElement("div");
   caixa.className = "indicador" + (classeExtra ? " " + classeExtra : "");
@@ -34,6 +36,7 @@ function desenharIndicadores(resumo) {
     criarIndicador(resumo.total_livros, "Títulos cadastrados"),
     criarIndicador(resumo.total_exemplares, "Total de exemplares"),
     criarIndicador(resumo.total_autores, "Autores"),
+    // Destaca o cartão em alerta quando houver livros com 0 exemplares.
     criarIndicador(
       resumo.esgotados,
       "Sem exemplares",
@@ -42,6 +45,7 @@ function desenharIndicadores(resumo) {
   );
 }
 
+// Renderiza lista com barras proporcionais ao total de títulos (reutilizada para gênero e autor).
 function desenharBarras(container, lista, campoNome, totalBase, mensagemVazio) {
   if (!Array.isArray(lista) || lista.length === 0) {
     container.textContent = mensagemVazio;

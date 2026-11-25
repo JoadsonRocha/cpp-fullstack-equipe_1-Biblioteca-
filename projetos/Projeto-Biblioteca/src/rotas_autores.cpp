@@ -1,3 +1,4 @@
+// rotas_autores.cpp - Endpoints REST do recurso "autores" (entidade de apoio).
 #include "rotas_autores.hpp"
 
 #include <string>
@@ -13,6 +14,7 @@ using nlohmann::json;
 
 namespace {
 
+// Valida todos os campos de entrada do autor antes de acessar o banco (gera 422 se houver erros).
 json validarAutor(const json& dados) {
     json erros = json::array();
     validacao::textoObrigatorio(dados, "nome", 100, erros);
@@ -23,7 +25,7 @@ json validarAutor(const json& dados) {
 }  // namespace
 
 void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
-    // LISTAR
+    // LISTAR: aceita busca opcional (?busca=...) no nome ou na nacionalidade.
     servidor.Get("/api/autores", [&config](const httplib::Request& req, httplib::Response& res) {
         const std::string busca = req.get_param_value("busca");
         util::comBanco(config, res, [&](Conexao& banco) {
@@ -32,7 +34,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // LISTAR LIVROS DO AUTOR
+    // LISTAR LIVROS DO AUTOR: rota extra para consultar o catálogo de um autor específico.
     servidor.Get("/api/autores/:id/livros", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
@@ -49,7 +51,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // BUSCAR UM
+    // BUSCAR UM: devolve 400 se ":id" não for inteiro positivo, ou 404 se não existir.
     servidor.Get("/api/autores/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
@@ -66,7 +68,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // CRIAR
+    // CRIAR: nome duplicado dispara erro 1062 no MariaDB -> util::comBanco responde 409.
     servidor.Post("/api/autores", [&config](const httplib::Request& req, httplib::Response& res) {
         json dados;
         if (!util::lerCorpoObjeto(req, res, dados)) {
@@ -83,7 +85,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // ATUALIZAR
+    // ATUALIZAR: substitui nome e nacionalidade do autor informado.
     servidor.Put("/api/autores/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
@@ -109,7 +111,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // REMOVER
+    // REMOVER: autor com livros vinculados dispara FK 1451 -> util::comBanco responde 409.
     servidor.Delete("/api/autores/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {

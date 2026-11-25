@@ -1,3 +1,4 @@
+// livro_repositorio.cpp - Consultas SQL da tabela "livros" (todas parametrizadas com "?").
 #include "livro_repositorio.hpp"
 
 #include <vector>
@@ -8,6 +9,7 @@ using nlohmann::json;
 
 namespace {
 
+// JOIN com autores já traz "autor_nome" junto ao livro para evitar consultas extras no front-end.
 const char* const kSelect =
     "SELECT l.id, l.titulo, l.autor_id, a.nome AS autor_nome, l.genero, "
     "l.ano_publicacao, l.isbn, l.exemplares, l.criado_em "
@@ -16,6 +18,7 @@ const char* const kSelect =
 }  // namespace
 
 json LivroRepositorio::listar(const FiltrosLivro& filtros) {
+    // Monta cláusula WHERE dinâmica combinando apenas os filtros informados com AND.
     std::vector<std::string> condicoes;
     Conexao::Parametros valores;
 
@@ -47,6 +50,7 @@ json LivroRepositorio::listarPorAutor(long long autorId) {
 }
 
 json LivroRepositorio::resumo() {
+    // COALESCE garante 0 em vez de NULL caso a tabela ainda esteja vazia.
     json totais = banco_
                       .consultar(
                           "SELECT COUNT(*) AS total_livros, "
@@ -56,6 +60,7 @@ json LivroRepositorio::resumo() {
                           "FROM livros")
                       .front();
 
+    // Agrupa livros sem gênero definido sob o rótulo "Sem gênero".
     totais["por_genero"] = banco_.consultar(
         "SELECT COALESCE(NULLIF(genero, ''), 'Sem gênero') AS genero, "
         "COUNT(*) AS total_livros, "
@@ -64,6 +69,7 @@ json LivroRepositorio::resumo() {
         "GROUP BY COALESCE(NULLIF(genero, ''), 'Sem gênero') "
         "ORDER BY total_livros DESC, genero");
 
+    // LEFT JOIN inclui autores que ainda não possuem livros cadastrados.
     totais["por_autor"] = banco_.consultar(
         "SELECT a.id AS autor_id, a.nome AS autor, "
         "COUNT(l.id) AS total_livros, "
@@ -81,6 +87,7 @@ json LivroRepositorio::buscar(long long id) {
 }
 
 json LivroRepositorio::criar(const json& dados) {
+    // NULLIF(?, '') evita gravar "" em colunas opcionais (fundamental para o UNIQUE de isbn).
     banco_.executar(
         "INSERT INTO livros (titulo, autor_id, genero, ano_publicacao, isbn, exemplares) "
         "VALUES (?, ?, NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''), ?)",
@@ -94,6 +101,7 @@ json LivroRepositorio::criar(const json& dados) {
 }
 
 json LivroRepositorio::atualizar(long long id, const json& dados) {
+    // Confere existência antes para distinguir "id inexistente" (404) de "nenhum campo alterado" (0 linhas).
     if (buscar(id).is_null()) {
         return json(nullptr);
     }

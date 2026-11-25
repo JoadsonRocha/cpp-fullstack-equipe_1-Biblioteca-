@@ -18,6 +18,7 @@
 #include "rotas_livros.hpp"
 
 int main(int argc, char* argv[]) {
+    // Carrega configuração das variáveis de ambiente (ou valores padrão).
     Config config = Config::doAmbiente();
     if (argc > 1) {
         char* fim = nullptr;
@@ -30,8 +31,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // Inicializa a libmariadb antes de qualquer conexão em múltiplas threads do servidor HTTP.
     iniciarBiblioteca();
 
+    // Testa conectividade inicial apenas para feedback no terminal; o servidor sobe mesmo se o banco cair.
     try {
         Conexao teste(config);
         std::cout << "Banco OK: " << config.usuario << "@" << config.host << ":" << config.porta << "/"
@@ -43,10 +46,12 @@ int main(int argc, char* argv[]) {
 
     httplib::Server servidor;
 
+    // Entrega os arquivos estáticos do front-end (./public) na raiz "/".
     if (!servidor.set_mount_point("/", "./public")) {
         std::cerr << "AVISO: pasta ./public nao encontrada. Execute o servidor na pasta do projeto.\n";
     }
 
+    // Rotas de verificação de saúde do servidor e da conexão com o banco.
     servidor.Get("/api/saude", [](const httplib::Request&, httplib::Response& res) {
         util::enviarJson(res, {{"status", "ok"}});
     });
@@ -57,9 +62,11 @@ int main(int argc, char* argv[]) {
         });
     });
 
+    // Registra as rotas de autores (entidade de apoio) e livros (entidade principal).
     registrarRotasAutores(servidor, config);
     registrarRotasLivros(servidor, config);
 
+    // Captura exceções não tratadas nas rotas para responder 500 em JSON sem derrubar o servidor.
     servidor.set_exception_handler(
         [](const httplib::Request&, httplib::Response& res, std::exception_ptr ep) {
             try {
@@ -74,6 +81,7 @@ int main(int argc, char* argv[]) {
             util::enviarErro(res, 500, "Erro interno do servidor");
         });
 
+    // Garante resposta JSON padronizada para rotas /api/* inexistentes.
     servidor.set_error_handler([](const httplib::Request& req, httplib::Response& res) {
         if (req.path.rfind("/api/", 0) == 0 && res.status == 404 && res.body.empty()) {
             util::enviarErro(res, 404, "Rota nao encontrada");

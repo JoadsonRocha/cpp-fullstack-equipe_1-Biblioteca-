@@ -1,3 +1,4 @@
+// rotas_livros.cpp - Endpoints REST do recurso "livros" (entidade principal).
 #include "rotas_livros.hpp"
 
 #include <string>
@@ -13,6 +14,7 @@ using nlohmann::json;
 
 namespace {
 
+// Acumula todos os problemas de validação do livro para responder 422 de uma única vez.
 json validarLivro(const json& dados) {
     json erros = json::array();
     validacao::textoObrigatorio(dados, "titulo", 150, erros);
@@ -24,6 +26,7 @@ json validarLivro(const json& dados) {
     return erros;
 }
 
+// Extrai e valida os filtros opcionais da URL (?busca=...&genero=...&autor_id=...).
 FiltrosLivro lerFiltros(const httplib::Request& req, json& erros) {
     FiltrosLivro filtros;
     filtros.busca = req.get_param_value("busca");
@@ -31,6 +34,7 @@ FiltrosLivro lerFiltros(const httplib::Request& req, json& erros) {
 
     if (req.has_param("autor_id") && !req.get_param_value("autor_id").empty()) {
         const std::string texto = req.get_param_value("autor_id");
+        // Converte para número apenas quando tiver só dígitos; caso contrário passa texto para inteiroEmFaixa recusar.
         const bool soDigitos = texto.size() <= 10 && texto.find_first_not_of("0123456789") == std::string::npos;
         json recebido = json::object();
         recebido["autor_id"] = soDigitos ? json(std::stoll(texto)) : json(texto);
@@ -42,6 +46,7 @@ FiltrosLivro lerFiltros(const httplib::Request& req, json& erros) {
     return filtros;
 }
 
+// Checa a existência do autor antes do INSERT/UPDATE para devolver 422 claro em vez de 409 genérico da FK.
 bool autorExiste(Conexao& banco, const json& dados) {
     return !AutorRepositorio(banco).buscar(dados.at("autor_id").get<long long>()).is_null();
 }
@@ -63,7 +68,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // RESUMO do acervo (registrada ANTES de /api/livros/:id para "resumo" não cair no :id).
+    // RESUMO do acervo: precisa ser registrada ANTES de /api/livros/:id para "resumo" não cair no ":id".
     servidor.Get("/api/livros/resumo", [&config](const httplib::Request&, httplib::Response& res) {
         util::comBanco(config, res, [&](Conexao& banco) {
             LivroRepositorio repositorio(banco);
@@ -71,7 +76,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // BUSCAR UM
+    // BUSCAR UM: retorna o livro com autor_nome, 400 se ID inválido ou 404 se inexistente.
     servidor.Get("/api/livros/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
@@ -88,7 +93,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // CRIAR
+    // CRIAR: valida dados, confirma autor_id e insere (ISBN duplicado -> 409 via util::comBanco).
     servidor.Post("/api/livros", [&config](const httplib::Request& req, httplib::Response& res) {
         json dados;
         if (!util::lerCorpoObjeto(req, res, dados)) {
@@ -109,7 +114,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // ATUALIZAR
+    // ATUALIZAR: valida entrada, confirma autor_id e substitui todos os campos do livro.
     servidor.Put("/api/livros/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
@@ -139,7 +144,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // REMOVER
+    // REMOVER: responde 204 (sem corpo) em caso de sucesso ou 404 se não existir.
     servidor.Delete("/api/livros/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {

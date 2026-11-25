@@ -1,3 +1,4 @@
+// autor_repositorio.cpp - Consultas SQL da tabela "autores" (sempre com parâmetros "?").
 #include "autor_repositorio.hpp"
 
 #include "parametros.hpp"
@@ -6,6 +7,7 @@ using nlohmann::json;
 
 namespace {
 
+// LEFT JOIN traz também autores que ainda não têm livros cadastrados (com contadores zerados).
 const char* const kSelect =
     "SELECT a.id, a.nome, a.nacionalidade, a.criado_em, "
     "COUNT(l.id) AS total_livros, COALESCE(SUM(l.exemplares), 0) AS total_exemplares "
@@ -19,6 +21,7 @@ json AutorRepositorio::listar(const std::string& busca) {
     if (busca.empty()) {
         return banco_.consultar(std::string(kSelect) + kAgrupar + "ORDER BY a.nome");
     }
+    // Escapa curingas (% e _) para evitar que caracteres digitados alterem o padrão do LIKE.
     const std::string padrao = "%" + parametros::escaparLike(busca) + "%";
     return banco_.consultar(
         std::string(kSelect) + "WHERE (a.nome LIKE ? OR COALESCE(a.nacionalidade, '') LIKE ?) " + kAgrupar +
@@ -32,12 +35,14 @@ json AutorRepositorio::buscar(long long id) {
 }
 
 json AutorRepositorio::criar(const json& dados) {
+    // NULLIF(?, ''): string vazia vira NULL real no MariaDB para campos opcionais.
     banco_.executar("INSERT INTO autores (nome, nacionalidade) VALUES (?, NULLIF(?, ''))",
                     {parametros::comoTexto(dados.at("nome")), parametros::opcional(dados, "nacionalidade")});
     return buscar(static_cast<long long>(banco_.ultimoId()));
 }
 
 json AutorRepositorio::atualizar(long long id, const json& dados) {
+    // Confere existência antes do UPDATE porque UPDATE sem mudanças retorna 0 linhas afetadas.
     if (buscar(id).is_null()) {
         return json(nullptr);
     }
@@ -48,5 +53,6 @@ json AutorRepositorio::atualizar(long long id, const json& dados) {
 }
 
 bool AutorRepositorio::remover(long long id) {
+    // Se o autor possuir livros, a FK ON DELETE RESTRICT lança ErroBanco (1451) -> rota responde 409.
     return banco_.executar("DELETE FROM autores WHERE id = ?", {std::to_string(id)}) > 0;
 }
