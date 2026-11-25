@@ -82,7 +82,7 @@ autores (1) ───────< (N) livros
 ## Checklist de entrega (dia 9)
 
 - [x] O projeto compila sem avisos (`-Wall -Wextra`)
-- [ ] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo *(testar no Docker)*
+- [x] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo
 - [x] Todo SQL usa parâmetros `?`
 - [ ] CRUD completo funciona pela tela *(validar após subir banco e servidor)*
 - [ ] O README da equipe foi testado em outro computador
