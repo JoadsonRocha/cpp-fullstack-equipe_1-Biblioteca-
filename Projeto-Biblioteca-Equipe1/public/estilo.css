@@ -563,3 +563,157 @@ tr.linha-apagada td {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Página interativa de documentação da API (api.html) */
+.api-intro { margin: 0 0 1rem; color: var(--cor-texto-suave); }
+.api-intro code, .api-nota code {
+  background: var(--cor-superficie-suave);
+  border: 1px solid var(--cor-borda);
+  padding: 0.1rem 0.35rem;
+  border-radius: 5px;
+  font-size: 0.88em;
+  color: var(--cor-principal);
+}
+.api-nota {
+  margin: 0.5rem 0 1.2rem;
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.filtros-api { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+.filtro-api-btn {
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  background: var(--cor-superficie-suave);
+  color: var(--cor-texto-suave);
+  border: 1px solid var(--cor-borda-forte);
+  font-size: 0.85rem;
+}
+.filtro-api-btn:hover { background: #e2e8f0; color: var(--cor-texto); box-shadow: none; }
+.filtro-api-btn.ativo {
+  background: var(--cor-principal);
+  color: #ffffff;
+  border-color: var(--cor-principal);
+}
+
+.lista-endpoints { display: flex; flex-direction: column; gap: 1rem; }
+
+.endpoint {
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 1.05rem 1.2rem;
+  background: var(--cor-superficie-suave);
+}
+.endpoint[hidden] { display: none; }
+
+.endpoint-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.endpoint-rota {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.endpoint-caminho {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+.endpoint-titulo { font-size: 0.95rem; color: var(--cor-texto-suave); font-weight: 600; }
+.endpoint-desc { margin: 0.5rem 0 0.85rem; font-size: 0.92rem; color: var(--cor-texto-suave); }
+
+.metodo-badge {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+.metodo-get { background: #0369a1; }
+.metodo-post { background: #15803d; }
+.metodo-put { background: #b45309; }
+.metodo-delete { background: #b91c1c; }
+
+.endpoint-status { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.status-pill {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.status-pill.ok { background: var(--cor-ok-fundo); color: var(--cor-ok); border: 1px solid #bbf7d0; }
+.status-pill.erro { background: var(--cor-perigo-fundo); color: var(--cor-perigo); border: 1px solid #fecaca; }
+
+.badge-status {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-status.status-ok { background: var(--cor-ok-fundo); color: var(--cor-ok); border: 1px solid #bbf7d0; }
+.badge-status.status-erro { background: var(--cor-perigo-fundo); color: var(--cor-perigo); border: 1px solid #fecaca; }
+
+.endpoint-params {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.atalhos-json {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+  font-size: 0.84rem;
+  color: var(--cor-texto-suave);
+}
+.btn-atalho { padding: 0.28rem 0.65rem; font-size: 0.8rem; border-radius: 999px; }
+
+.json-editor {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  min-height: 7.5rem;
+}
+
+.codigo-bloco {
+  margin: 0.65rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.endpoint-acoes { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+
+.resposta-box {
+  margin-top: 0.85rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+.resposta-cab {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+.resposta-cab code { font-size: 0.85rem; color: var(--cor-texto-suave); }
+.resposta-json { max-height: 280px; overflow-y: auto; }

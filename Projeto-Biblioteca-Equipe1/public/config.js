@@ -43,5 +43,6 @@ const CONFIG = {
     { texto: "Livros", href: "index.html" },
     { texto: "Autores", href: "autores.html" },
     { texto: "Resumo", href: "resumo.html" },
+    { texto: "API Docs", href: "api.html" },
   ],
 };

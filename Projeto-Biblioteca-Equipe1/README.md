@@ -45,6 +45,7 @@ Navegador (HTML + CSS + JS)  ⇄  API REST C++17 (cpp-httplib + nlohmann/json)  
 | **Livros** | [`public/index.html`](public/index.html) + [`public/config.js`](public/config.js) | Listagem com nome do autor, busca, filtro por autor, botão **`+ Novo livro`** abrindo modal criar/editar com `<select>` dinâmico e destaque visual (`linha-alerta`) para livros com `0` exemplares. |
 | **Autores** | [`public/autores.html`](public/autores.html) + [`public/config-autores.js`](public/config-autores.js) | Cadastro em modal (`+ Novo autor`), edição, busca e exclusão de autores com exibição de total de títulos e exemplares. |
 | **Resumo** | [`public/resumo.html`](public/resumo.html) + [`public/resumo.js`](public/resumo.js) | Cartões de indicadores gerais e barras proporcionais por gênero e por autor consumindo `GET /api/livros/resumo`. |
+| **API Docs** | [`public/api.html`](public/api.html) + [`public/api.js`](public/api.js) | Documentação interativa dentro do próprio site com explicação das 14 rotas, códigos HTTP, exemplos prontos, cópia de `curl` e testador ao vivo (`fetch`). |
 
 ### Capturas de Tela
 
@@ -232,10 +233,12 @@ Projeto-Biblioteca-Equipe1/
     ├── index.html                tela principal de livros + modal de cadastro
     ├── autores.html              tela de autores + modal de cadastro
     ├── resumo.html               painel de resumo do acervo
+    ├── api.html                  documentação interativa e testador da API
     ├── config.js                 configuração da tela de livros
     ├── config-autores.js         configuração da tela de autores
     ├── app.js                    CRUD genérico + controle do modal
     ├── resumo.js                 carregamento do painel de resumo
+    ├── api.js                    lógica dos cartões e testes ao vivo da API
     ├── estilo.css                design system responsivo
     └── Captura de Tela (46..49).png  capturas de tela das interfaces
 ```

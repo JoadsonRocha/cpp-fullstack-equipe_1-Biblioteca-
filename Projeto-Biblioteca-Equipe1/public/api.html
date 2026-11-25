@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f3d56">
+  <title>API Docs — Biblioteca</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="estilo.css?v=4">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+
+  <header class="topo">
+    <div class="topo-conteudo">
+      <div class="topo-marca">
+        <img class="topo-icone" src="favicon.svg" alt="" width="40" height="40">
+        <div>
+          <h1>Biblioteca — Documentação da API</h1>
+          <p class="sub">Guia interativo para testar rotas, parâmetros, JSON e códigos HTTP direto na tela</p>
+        </div>
+      </div>
+      <nav class="menu" aria-label="Telas do sistema">
+        <a href="index.html">Livros</a>
+        <a href="autores.html">Autores</a>
+        <a href="resumo.html">Resumo</a>
+        <a href="api.html" aria-current="page">API Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo-principal" class="conteudo">
+    <section class="cartao">
+      <h2>Como usar esta API</h2>
+      <p class="api-intro">
+        Todas as rotas respondem em <code>application/json; charset=utf-8</code> a partir da URL base
+        <code id="url-base">http://localhost:8080</code>. Nas rotas <code>POST</code> e <code>PUT</code>, envie um objeto JSON no corpo da requisição.
+      </p>
+      <div class="rolagem">
+        <table class="tabela-codigos">
+          <thead>
+            <tr>
+              <th>Status HTTP</th>
+              <th>Significado</th>
+              <th>Quando acontece nesta API</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge-status status-ok">200 OK</span></td><td>Sucesso</td><td>Listagem, busca por ID, resumo ou atualização concluída.</td></tr>
+            <tr><td><span class="badge-status status-ok">201 Created</span></td><td>Criado</td><td>Novo autor ou novo livro cadastrado com sucesso.</td></tr>
+            <tr><td><span class="badge-status status-ok">204 No Content</span></td><td>Removido</td><td>Exclusão concluída (resposta sem corpo JSON).</td></tr>
+            <tr><td><span class="badge-status status-erro">400 Bad Request</span></td><td>Requisição inválida</td><td>JSON malformado no corpo ou <code>:id</code> não numérico (ex.: <code>/api/livros/abc</code>).</td></tr>
+            <tr><td><span class="badge-status status-erro">404 Not Found</span></td><td>Não encontrado</td><td>ID não existe no banco ou rota <code>/api/...</code> inexistente.</td></tr>
+            <tr><td><span class="badge-status status-erro">409 Conflict</span></td><td>Conflito / Regra</td><td>Nome de autor duplicado, ISBN repetido ou tentativa de excluir autor com livros.</td></tr>
+            <tr><td><span class="badge-status status-erro">422 Unprocessable</span></td><td>Dados inválidos</td><td>Campo obrigatório vazio, faixa numérica inválida (<code>ano_publicacao</code>) ou <code>autor_id</code> inexistente.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <div class="barra">
+        <h2>Endpoints disponíveis</h2>
+        <div id="filtros-api" class="filtros-api" role="group" aria-label="Filtrar endpoints por recurso">
+          <button type="button" class="filtro-api-btn ativo" data-grupo="todos">Todos (14)</button>
+          <button type="button" class="filtro-api-btn" data-grupo="saude">Saúde</button>
+          <button type="button" class="filtro-api-btn" data-grupo="autores">Autores</button>
+          <button type="button" class="filtro-api-btn" data-grupo="livros">Livros</button>
+        </div>
+      </div>
+      <p class="api-nota">
+        Dica: clique em <strong>Testar agora</strong> para enviar uma requisição real para o servidor C++ e ver o status e o JSON abaixo do cartão.
+        Rotas <code>POST</code>, <code>PUT</code> e <code>DELETE</code> válidas alteram os dados reais no MariaDB.
+      </p>
+      <div id="lista-endpoints" class="lista-endpoints"></div>
+    </section>
+  </main>
+
+  <!-- Documentação interativa da API REST em JavaScript puro -->
+  <script src="api.js?v=4"></script>
+</body>
+</html>
