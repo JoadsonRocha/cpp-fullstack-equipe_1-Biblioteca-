@@ -22,6 +22,26 @@ json validarAutor(const json& dados) {
     return erros;
 }
 
+// Traduz conflitos de banco (1062 nome único e 1451 FK de livros) para mensagens claras ao usuário.
+template <typename Fn>
+void comConflitoAutor(httplib::Response& res, Fn&& operacao) {
+    try {
+        operacao();
+    } catch (const ErroBanco& erro) {
+        if (erro.chaveDuplicada()) {
+            util::enviarErro(res, 409, "Ja existe um autor cadastrado com este nome.");
+            return;
+        }
+        if (erro.violacaoDeChaveEstrangeira()) {
+            util::enviarErro(res, 409,
+                             "Nao e possivel excluir este autor porque ele ainda possui livros cadastrados. "
+                             "Exclua ou transfira os livros primeiro.");
+            return;
+        }
+        throw;
+    }
+}
+
 }  // namespace
 
 void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
@@ -68,7 +88,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         });
     });
 
-    // CRIAR: nome duplicado dispara erro 1062 no MariaDB -> util::comBanco responde 409.
+    // CRIAR: nome duplicado dispara erro 1062 no MariaDB -> responde 409 com mensagem clara.
     servidor.Post("/api/autores", [&config](const httplib::Request& req, httplib::Response& res) {
         json dados;
         if (!util::lerCorpoObjeto(req, res, dados)) {
@@ -80,8 +100,10 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
             return;
         }
         util::comBanco(config, res, [&](Conexao& banco) {
-            AutorRepositorio repositorio(banco);
-            util::enviarJson(res, repositorio.criar(dados), 201);
+            comConflitoAutor(res, [&]() {
+                AutorRepositorio repositorio(banco);
+                util::enviarJson(res, repositorio.criar(dados), 201);
+            });
         });
     });
 
@@ -101,29 +123,33 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
             return;
         }
         util::comBanco(config, res, [&](Conexao& banco) {
-            AutorRepositorio repositorio(banco);
-            json atualizado = repositorio.atualizar(id, dados);
-            if (atualizado.is_null()) {
-                util::enviarErro(res, 404, "Autor nao encontrado");
-                return;
-            }
-            util::enviarJson(res, atualizado);
+            comConflitoAutor(res, [&]() {
+                AutorRepositorio repositorio(banco);
+                json atualizado = repositorio.atualizar(id, dados);
+                if (atualizado.is_null()) {
+                    util::enviarErro(res, 404, "Autor nao encontrado");
+                    return;
+                }
+                util::enviarJson(res, atualizado);
+            });
         });
     });
 
-    // REMOVER: autor com livros vinculados dispara FK 1451 -> util::comBanco responde 409.
+    // REMOVER: autor com livros vinculados dispara FK 1451 -> responde 409 explicando o motivo.
     servidor.Delete("/api/autores/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;
         if (!util::lerId(req, res, id)) {
             return;
         }
         util::comBanco(config, res, [&](Conexao& banco) {
-            AutorRepositorio repositorio(banco);
-            if (!repositorio.remover(id)) {
-                util::enviarErro(res, 404, "Autor nao encontrado");
-                return;
-            }
-            res.status = 204;
+            comConflitoAutor(res, [&]() {
+                AutorRepositorio repositorio(banco);
+                if (!repositorio.remover(id)) {
+                    util::enviarErro(res, 404, "Autor nao encontrado");
+                    return;
+                }
+                res.status = 204;
+            });
         });
     });
 }

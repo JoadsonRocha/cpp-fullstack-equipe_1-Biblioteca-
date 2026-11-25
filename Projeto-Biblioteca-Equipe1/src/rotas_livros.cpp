@@ -51,6 +51,20 @@ bool autorExiste(Conexao& banco, const json& dados) {
     return !AutorRepositorio(banco).buscar(dados.at("autor_id").get<long long>()).is_null();
 }
 
+// Traduz erro 1062 (ISBN único) para uma mensagem amigável ao usuário.
+template <typename Fn>
+void comConflitoIsbn(httplib::Response& res, Fn&& operacao) {
+    try {
+        operacao();
+    } catch (const ErroBanco& erro) {
+        if (erro.chaveDuplicada()) {
+            util::enviarErro(res, 409, "Ja existe um livro cadastrado com este ISBN.");
+            return;
+        }
+        throw;
+    }
+}
+
 }  // namespace
 
 void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
@@ -109,8 +123,10 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
                 util::enviarErro(res, 422, "Dados invalidos", json::array({"autor_id nao existe"}));
                 return;
             }
-            LivroRepositorio repositorio(banco);
-            util::enviarJson(res, repositorio.criar(dados), 201);
+            comConflitoIsbn(res, [&]() {
+                LivroRepositorio repositorio(banco);
+                util::enviarJson(res, repositorio.criar(dados), 201);
+            });
         });
     });
 
@@ -134,13 +150,15 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
                 util::enviarErro(res, 422, "Dados invalidos", json::array({"autor_id nao existe"}));
                 return;
             }
-            LivroRepositorio repositorio(banco);
-            json atualizado = repositorio.atualizar(id, dados);
-            if (atualizado.is_null()) {
-                util::enviarErro(res, 404, "Livro nao encontrado");
-                return;
-            }
-            util::enviarJson(res, atualizado);
+            comConflitoIsbn(res, [&]() {
+                LivroRepositorio repositorio(banco);
+                json atualizado = repositorio.atualizar(id, dados);
+                if (atualizado.is_null()) {
+                    util::enviarErro(res, 404, "Livro nao encontrado");
+                    return;
+                }
+                util::enviarJson(res, atualizado);
+            });
         });
     });
 
