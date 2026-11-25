@@ -28,16 +28,18 @@ Professor: Msc. Hygo Sousa De Oliveira
 
 ## Material do Curso (Referência)
 
-O repositório oficial do curso (`Hygo/c--fullstack-iteam-2sem`) é somente para leitura. As instruções de cópia e entrega estão em [COMO-OBTER-AS-ATIVIDADES.md](COMO-OBTER-AS-ATIVIDADES.md) e o cálculo da nota em [AVALIACAO.md](AVALIACAO.md).
+> Todo o material original do professor foi organizado em [`material-professor/`](material-professor/) para manter o projeto da equipe limpo na raiz (mantendo [`projetos/EQUIPE.md`](projetos/EQUIPE.md) no caminho oficial).
+
+O repositório oficial do curso (`Hygo/c--fullstack-iteam-2sem`) é somente para leitura. As instruções de cópia e entrega estão em [COMO-OBTER-AS-ATIVIDADES.md](material-professor/COMO-OBTER-AS-ATIVIDADES.md) e o cálculo da nota em [AVALIACAO.md](material-professor/AVALIACAO.md).
 
 | Pasta | Conteúdo | Atividades | Situação |
 |-------|----------|------------|----------|
-| [`unidade-01/`](unidade-01/) | Introdução ao C++ | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`unidade-02/`](unidade-02/) | Estruturas de controle | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`unidade-03/`](unidade-03/) | Funções e ponteiros | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`unidade-04/`](unidade-04/) | Programação orientada a objetos | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`unidade-05/`](unidade-05/) | Bibliotecas e recursos avançados | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`projetos/`](projetos/) | **Material de apoio do projeto final:** guias, starter kit, demo e rubrica | 1 projeto (3 temas) | Liberado |
+| [`material-professor/unidade-01/`](material-professor/unidade-01/) | Introdução ao C++ | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
+| [`material-professor/unidade-02/`](material-professor/unidade-02/) | Estruturas de controle | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
+| [`material-professor/unidade-03/`](material-professor/unidade-03/) | Funções e ponteiros | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
+| [`material-professor/unidade-04/`](material-professor/unidade-04/) | Programação orientada a objetos | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
+| [`material-professor/unidade-05/`](material-professor/unidade-05/) | Bibliotecas e recursos avançados | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
+| [`material-professor/projetos/`](material-professor/projetos/) | **Material de apoio do projeto final:** guias, starter kit, demo e rubrica | 1 projeto (3 temas) | Liberado |
 
 ## Como compilar as atividades
 
@@ -47,4 +49,4 @@ Todos os programas do curso usam **C++17** e devem ser compilados com avisos ati
 g++ -std=c++17 -Wall -Wextra programa.cpp -o programa.exe
 ```
 
-Verifique se o compilador está instalado com `g++ --version`. No Windows, recomendamos o **MSYS2 (UCRT64)**; o passo a passo está em [`projetos/guia/01-preparar-ambiente.md`](projetos/guia/01-preparar-ambiente.md). No VS Code, o atalho **Ctrl+Shift+B** compila o arquivo aberto (tarefa já configurada em `.vscode/tasks.json`).
+Verifique se o compilador está instalado com `g++ --version`. No Windows, recomendamos o **MSYS2 (UCRT64)**; o passo a passo está em [`material-professor/projetos/guia/01-preparar-ambiente.md`](material-professor/projetos/guia/01-preparar-ambiente.md). No VS Code, o atalho **Ctrl+Shift+B** compila o arquivo aberto (tarefa já configurada em `.vscode/tasks.json`).

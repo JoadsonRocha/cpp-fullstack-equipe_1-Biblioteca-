@@ -52,7 +52,7 @@ Navegador (HTML + CSS + JS)  ⇄  API REST C++17 (cpp-httplib + nlohmann/json)  
 
 ### Pré-requisitos
 - **Modo completo com Docker:** Docker Desktop instalado e em execução.
-- **Modo local (Windows/Linux):** `g++` com C++17 (MSYS2 UCRT64 no Windows) + `libmariadb` + Docker (ou MariaDB local). Guia detalhado em [`../projetos/guia/01-preparar-ambiente.md`](../projetos/guia/01-preparar-ambiente.md).
+- **Modo local (Windows/Linux):** `g++` com C++17 (MSYS2 UCRT64 no Windows) + `libmariadb` + Docker (ou MariaDB local). Guia detalhado em [`../material-professor/projetos/guia/01-preparar-ambiente.md`](../material-professor/projetos/guia/01-preparar-ambiente.md).
 
 ### Opção 1 — Subir tudo via Docker (Banco + API C++ + Front-end)
 
@@ -236,5 +236,5 @@ Projeto-Biblioteca-Equipe1/
 - **Integrantes:** Joadson Rocha (`JoadsonRocha`), Eduardo Felipe *(demais integrantes em [`../projetos/EQUIPE.md`](../projetos/EQUIPE.md))*
 - **Documentação da equipe:** [`../projetos/EQUIPE.md`](../projetos/EQUIPE.md)
 - **Roteiro da apresentação:** [`APRESENTACAO.md`](APRESENTACAO.md)
-- **Rubrica de avaliação:** [`../projetos/rubrica.md`](../projetos/rubrica.md)
+- **Rubrica de avaliação:** [`../material-professor/projetos/rubrica.md`](../material-professor/projetos/rubrica.md)
 - **Tag de entrega final:** `projeto-final`

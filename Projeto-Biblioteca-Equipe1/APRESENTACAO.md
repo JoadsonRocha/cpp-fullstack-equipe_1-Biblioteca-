@@ -1,6 +1,6 @@
 # Apresentação do Projeto Final — Biblioteca
 
-> Roteiro estruturado para a apresentação em equipe (**10 a 12 minutos · 4 integrantes**), cobrindo demonstração ao vivo, arquitetura, todas as rotas da API, fluxo de uma requisição e respostas às perguntas da [rubrica](../projetos/rubrica.md).
+> Roteiro estruturado para a apresentação em equipe (**10 a 12 minutos · 4 integrantes**), cobrindo demonstração ao vivo, arquitetura, todas as rotas da API, fluxo de uma requisição e respostas às perguntas da [rubrica](../material-professor/projetos/rubrica.md).
 
 ---
 
