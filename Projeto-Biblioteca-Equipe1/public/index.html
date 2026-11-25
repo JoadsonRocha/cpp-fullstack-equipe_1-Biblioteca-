@@ -28,13 +28,14 @@
     <p id="aviso" class="aviso" role="status" hidden></p>
 
     <section class="cartao">
-      <h2 id="titulo-formulario">Novo registro</h2>
-      <form id="formulario" novalidate></form>
-    </section>
-
-    <section class="cartao">
       <div class="barra">
-        <h2>Acervo de livros <span class="legenda-alerta">0 exemplares em destaque</span></h2>
+        <div class="barra-titulo">
+          <h2>Acervo de livros <span class="legenda-alerta">0 exemplares em destaque</span></h2>
+          <button type="button" id="btn-novo" class="btn-novo">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 4a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-4v4a1 1 0 1 1-2 0v-4H5a1 1 0 1 1 0-2h4V5a1 1 0 0 1 1-1Z"/></svg>
+            Novo livro
+          </button>
+        </div>
         <form id="form-busca" class="busca" role="search">
           <input id="busca" type="search" placeholder="Título, gênero, autor ou ISBN..." aria-label="Buscar livros">
           <button type="submit">Buscar</button>
@@ -50,6 +51,18 @@
       <p id="vazio" class="vazio" hidden>Nenhum livro encontrado.</p>
     </section>
   </main>
+
+  <!-- Modal moderno para criar e editar livros -->
+  <div id="modal-formulario" class="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-formulario" hidden>
+    <div class="modal-cartao">
+      <div class="modal-cabecalho">
+        <h2 id="titulo-formulario">Novo registro</h2>
+        <button type="button" id="fechar-modal" class="btn-fechar" aria-label="Fechar janela">&times;</button>
+      </div>
+      <p id="aviso-modal" class="aviso" role="alert" hidden></p>
+      <form id="formulario" novalidate></form>
+    </div>
+  </div>
 
   <!-- Tela principal de Livros: config.js define os campos e filtros; app.js monta o CRUD -->
   <script src="config.js"></script>

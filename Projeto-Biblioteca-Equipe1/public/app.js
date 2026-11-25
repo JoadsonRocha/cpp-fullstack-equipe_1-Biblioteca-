@@ -13,6 +13,10 @@ const el = {
   titulo: document.getElementById("titulo-pagina"),
   tituloFormulario: document.getElementById("titulo-formulario"),
   formulario: document.getElementById("formulario"),
+  modal: document.getElementById("modal-formulario"),
+  btnNovo: document.getElementById("btn-novo"),
+  fecharModal: document.getElementById("fechar-modal"),
+  avisoModal: document.getElementById("aviso-modal"),
   formBusca: document.getElementById("form-busca"),
   busca: document.getElementById("busca"),
   limparBusca: document.getElementById("limpar-busca"),
@@ -70,12 +74,31 @@ async function api(metodo, url, corpo) {
 
 function mostrarAviso(texto, tipo) {
   clearTimeout(temporizadorAviso);
-  el.aviso.textContent = texto; // textContent: nunca interpreta HTML
-  el.aviso.className = "aviso " + tipo;
-  el.aviso.hidden = false;
+  const modalAberto = el.modal && !el.modal.hidden;
+  const alvo = modalAberto && tipo === "erro" && el.avisoModal ? el.avisoModal : el.aviso;
+  alvo.textContent = texto; // textContent: nunca interpreta HTML
+  alvo.className = "aviso " + tipo;
+  alvo.hidden = false;
   if (tipo === "ok") {
-    temporizadorAviso = setTimeout(() => (el.aviso.hidden = true), 4000);
+    temporizadorAviso = setTimeout(() => (alvo.hidden = true), 4000);
   }
+}
+
+function abrirFormulario() {
+  if (!el.modal) return;
+  if (el.avisoModal) el.avisoModal.hidden = true;
+  el.modal.hidden = false;
+  document.body.classList.add("modal-aberto");
+  const primeiro = camposEditaveis()[0];
+  if (primeiro) document.getElementById("campo-" + primeiro.nome).focus();
+}
+
+function fecharFormulario() {
+  if (!el.modal) return;
+  el.modal.hidden = true;
+  document.body.classList.remove("modal-aberto");
+  if (el.avisoModal) el.avisoModal.hidden = true;
+  reiniciarFormulario();
 }
 
 /* ------------------------------------ formulário ------------------------------------ */
@@ -139,7 +162,10 @@ function construirFormulario() {
   cancelar.type = "button";
   cancelar.className = "secundario";
   cancelar.textContent = "Cancelar";
-  cancelar.addEventListener("click", reiniciarFormulario);
+  cancelar.addEventListener("click", () => {
+    if (el.modal) fecharFormulario();
+    else reiniciarFormulario();
+  });
 
   acoes.append(botaoSalvar, cancelar);
   el.formulario.appendChild(acoes);
@@ -298,6 +324,7 @@ async function aoEnviar(evento) {
       await api("PUT", API + "/" + editandoId, dados);
       mostrarAviso("Registro atualizado.", "ok");
     }
+    fecharFormulario();
     reiniciarFormulario();
     await carregar();
   } catch (erro) {
@@ -424,9 +451,13 @@ function iniciarEdicao(registro) {
   editandoId = registro.id;
   el.tituloFormulario.textContent = "Editar registro #" + registro.id;
   preencherFormulario(registro);
-  el.formulario.scrollIntoView({ behavior: "smooth", block: "center" });
-  const primeiro = camposEditaveis()[0];
-  if (primeiro) document.getElementById("campo-" + primeiro.nome).focus();
+  if (el.modal) {
+    abrirFormulario();
+  } else {
+    el.formulario.scrollIntoView({ behavior: "smooth", block: "center" });
+    const primeiro = camposEditaveis()[0];
+    if (primeiro) document.getElementById("campo-" + primeiro.nome).focus();
+  }
 }
 
 async function executarAcaoExtra(acao, registro) {
@@ -480,6 +511,21 @@ async function iniciar() {
   reiniciarFormulario();
 
   el.formulario.addEventListener("submit", aoEnviar);
+  if (el.btnNovo) {
+    el.btnNovo.addEventListener("click", () => {
+      reiniciarFormulario();
+      abrirFormulario();
+    });
+  }
+  if (el.fecharModal) el.fecharModal.addEventListener("click", fecharFormulario);
+  if (el.modal) {
+    el.modal.addEventListener("click", (evento) => {
+      if (evento.target === el.modal) fecharFormulario();
+    });
+    document.addEventListener("keydown", (evento) => {
+      if (evento.key === "Escape" && !el.modal.hidden) fecharFormulario();
+    });
+  }
   el.formBusca.addEventListener("submit", (evento) => {
     evento.preventDefault();
     termoBusca = el.busca.value.trim();
