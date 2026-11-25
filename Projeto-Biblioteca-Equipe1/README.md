@@ -218,6 +218,7 @@ Projeto-Biblioteca-Equipe1/
 │   ├── rotas_autores.hpp/.cpp
 │   └── rotas_livros.hpp/.cpp
 └── public/
+    ├── favicon.svg               ícone SVG do título/aba do navegador
     ├── index.html                tela principal de livros
     ├── autores.html              tela de autores
     ├── resumo.html               painel de resumo do acervo

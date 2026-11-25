@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f3d56">
   <title>Biblioteca — Livros</title>
-  <link rel="icon" href="data:,">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
+  <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+
   <header class="topo">
-    <h1 id="titulo-pagina">Carregando...</h1>
-    <p class="sub">Controle de acervo, autores e exemplares &mdash; API em C++17 + MariaDB</p>
-    <nav id="menu" class="menu" aria-label="Telas do sistema" hidden></nav>
+    <div class="topo-conteudo">
+      <div class="topo-marca">
+        <img class="topo-icone" src="favicon.svg" alt="" width="40" height="40">
+        <div>
+          <h1 id="titulo-pagina">Carregando...</h1>
+          <p class="sub">Controle de acervo, autores e exemplares &mdash; API em C++17 + MariaDB</p>
+        </div>
+      </div>
+      <nav id="menu" class="menu" aria-label="Telas do sistema" hidden></nav>
+    </div>
   </header>
 
-  <main class="conteudo">
+  <main id="conteudo-principal" class="conteudo">
     <p id="aviso" class="aviso" role="status" hidden></p>
 
     <section class="cartao">
@@ -24,7 +34,7 @@
 
     <section class="cartao">
       <div class="barra">
-        <h2>Acervo de livros <small class="legenda-alerta">(linhas em destaque = 0 exemplares)</small></h2>
+        <h2>Acervo de livros <span class="legenda-alerta">0 exemplares em destaque</span></h2>
         <form id="form-busca" class="busca" role="search">
           <input id="busca" type="search" placeholder="Título, gênero, autor ou ISBN..." aria-label="Buscar livros">
           <button type="submit">Buscar</button>

@@ -3,22 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Resumo - Biblioteca</title>
-  <link rel="icon" href="data:,">
+  <meta name="theme-color" content="#0f3d56">
+  <title>Resumo — Biblioteca</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
+  <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+
   <header class="topo">
-    <h1>Biblioteca — Resumo do Acervo</h1>
-    <p class="sub">Indicadores calculados pela API em <code>GET /api/livros/resumo</code></p>
-    <nav class="menu" aria-label="Telas do sistema">
-      <a href="index.html">Livros</a>
-      <a href="autores.html">Autores</a>
-      <a href="resumo.html" aria-current="page">Resumo</a>
-    </nav>
+    <div class="topo-conteudo">
+      <div class="topo-marca">
+        <img class="topo-icone" src="favicon.svg" alt="" width="40" height="40">
+        <div>
+          <h1>Biblioteca — Resumo do Acervo</h1>
+          <p class="sub">Indicadores calculados pela API em <code>GET /api/livros/resumo</code></p>
+        </div>
+      </div>
+      <nav class="menu" aria-label="Telas do sistema">
+        <a href="index.html">Livros</a>
+        <a href="autores.html">Autores</a>
+        <a href="resumo.html" aria-current="page">Resumo</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="conteudo">
+  <main id="conteudo-principal" class="conteudo">
     <p id="aviso" class="aviso" role="status" hidden></p>
 
     <section class="cartao">
