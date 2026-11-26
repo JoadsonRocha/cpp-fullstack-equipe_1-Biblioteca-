@@ -17,7 +17,7 @@
 | Joadson Rocha | `JoadsonRocha` | [FullStack] |
 | Abel Benicio | `AbelBenicioDev` | [Fullstack] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
-| Eduardo Felipe | `[Preencher usuário]` | [Preencher papel] |
+| Eduardo Felipe | `LipehSanttos` | [FullStack] |
 | [Jorge Siqueira Serrão] | `[Jorge-Siqueira-Serrao]` | [FullStack] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 
