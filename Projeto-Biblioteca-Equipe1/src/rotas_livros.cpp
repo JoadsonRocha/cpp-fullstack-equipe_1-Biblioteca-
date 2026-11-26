@@ -113,6 +113,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         if (!util::lerCorpoObjeto(req, res, dados)) {
             return;
         }
+        validacao::apararTextos(dados);
         json erros = validarLivro(dados);
         if (!erros.empty()) {
             util::enviarErro(res, 422, "Dados invalidos", erros);
@@ -140,6 +141,7 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         if (!util::lerCorpoObjeto(req, res, dados)) {
             return;
         }
+        validacao::apararTextos(dados);
         json erros = validarLivro(dados);
         if (!erros.empty()) {
             util::enviarErro(res, 422, "Dados invalidos", erros);

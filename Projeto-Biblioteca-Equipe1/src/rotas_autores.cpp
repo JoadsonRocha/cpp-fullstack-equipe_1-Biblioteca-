@@ -94,6 +94,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         if (!util::lerCorpoObjeto(req, res, dados)) {
             return;
         }
+        validacao::apararTextos(dados);
         json erros = validarAutor(dados);
         if (!erros.empty()) {
             util::enviarErro(res, 422, "Dados invalidos", erros);
@@ -117,6 +118,7 @@ void registrarRotasAutores(httplib::Server& servidor, const Config& config) {
         if (!util::lerCorpoObjeto(req, res, dados)) {
             return;
         }
+        validacao::apararTextos(dados);
         json erros = validarAutor(dados);
         if (!erros.empty()) {
             util::enviarErro(res, 422, "Dados invalidos", erros);

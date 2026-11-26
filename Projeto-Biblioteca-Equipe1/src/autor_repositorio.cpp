@@ -10,7 +10,7 @@ namespace {
 // LEFT JOIN traz também autores que ainda não têm livros cadastrados (com contadores zerados).
 const char* const kSelect =
     "SELECT a.id, a.nome, a.nacionalidade, a.criado_em, "
-    "COUNT(l.id) AS total_livros, COALESCE(SUM(l.exemplares), 0) AS total_exemplares "
+    "COUNT(l.id) AS total_livros, CAST(COALESCE(SUM(l.exemplares), 0) AS SIGNED) AS total_exemplares "
     "FROM autores a LEFT JOIN livros l ON l.autor_id = a.id ";
 
 const char* const kAgrupar = "GROUP BY a.id, a.nome, a.nacionalidade, a.criado_em ";

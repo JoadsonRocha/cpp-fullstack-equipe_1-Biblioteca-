@@ -46,6 +46,9 @@ int main(int argc, char* argv[]) {
 
     httplib::Server servidor;
 
+    // Limita o corpo das requisicoes (64 KB sobram para um livro/autor); acima disso a API responde 413.
+    servidor.set_payload_max_length(64 * 1024);
+
     // Entrega os arquivos estáticos do front-end (./public) na raiz "/".
     if (!servidor.set_mount_point("/", "./public")) {
         std::cerr << "AVISO: pasta ./public nao encontrada. Execute o servidor na pasta do projeto.\n";
@@ -81,10 +84,15 @@ int main(int argc, char* argv[]) {
             util::enviarErro(res, 500, "Erro interno do servidor");
         });
 
-    // Garante resposta JSON padronizada para rotas /api/* inexistentes.
+    // Garante resposta JSON padronizada para erros sem corpo em rotas /api/* (404 e 413).
     servidor.set_error_handler([](const httplib::Request& req, httplib::Response& res) {
-        if (req.path.rfind("/api/", 0) == 0 && res.status == 404 && res.body.empty()) {
+        if (req.path.rfind("/api/", 0) != 0 || !res.body.empty()) {
+            return;
+        }
+        if (res.status == 404) {
             util::enviarErro(res, 404, "Rota nao encontrada");
+        } else if (res.status == 413) {
+            util::enviarErro(res, 413, "Corpo da requisicao grande demais (maximo 64 KB)");
         }
     });
 

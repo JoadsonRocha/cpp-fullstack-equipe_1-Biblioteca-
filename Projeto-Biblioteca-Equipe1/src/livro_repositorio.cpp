@@ -54,8 +54,8 @@ json LivroRepositorio::resumo() {
     json totais = banco_
                       .consultar(
                           "SELECT COUNT(*) AS total_livros, "
-                          "COALESCE(SUM(exemplares), 0) AS total_exemplares, "
-                          "COALESCE(SUM(exemplares = 0), 0) AS esgotados, "
+                          "CAST(COALESCE(SUM(exemplares), 0) AS SIGNED) AS total_exemplares, "
+                          "CAST(COALESCE(SUM(exemplares = 0), 0) AS SIGNED) AS esgotados, "
                           "(SELECT COUNT(*) FROM autores) AS total_autores "
                           "FROM livros")
                       .front();
@@ -64,7 +64,7 @@ json LivroRepositorio::resumo() {
     totais["por_genero"] = banco_.consultar(
         "SELECT COALESCE(NULLIF(genero, ''), 'Sem gênero') AS genero, "
         "COUNT(*) AS total_livros, "
-        "COALESCE(SUM(exemplares), 0) AS total_exemplares "
+        "CAST(COALESCE(SUM(exemplares), 0) AS SIGNED) AS total_exemplares "
         "FROM livros "
         "GROUP BY COALESCE(NULLIF(genero, ''), 'Sem gênero') "
         "ORDER BY total_livros DESC, genero");
@@ -73,7 +73,7 @@ json LivroRepositorio::resumo() {
     totais["por_autor"] = banco_.consultar(
         "SELECT a.id AS autor_id, a.nome AS autor, "
         "COUNT(l.id) AS total_livros, "
-        "COALESCE(SUM(l.exemplares), 0) AS total_exemplares "
+        "CAST(COALESCE(SUM(l.exemplares), 0) AS SIGNED) AS total_exemplares "
         "FROM autores a LEFT JOIN livros l ON l.autor_id = a.id "
         "GROUP BY a.id, a.nome "
         "ORDER BY total_livros DESC, a.nome");
