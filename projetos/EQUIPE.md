@@ -15,7 +15,7 @@
 | Nome | Usuário no GitHub | Papel principal (pode revezar) |
 |------|-------------------|--------------------------------|
 | Joadson Rocha | `JoadsonRocha` | [FullStack] |
-| Preencher nome | `[Preencher usuário]` | [Preencher papel] |
+| Abel Benicio | `AbelBenicioDev` | [Fullstack] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 | Eduardo Felipe | `[Preencher usuário]` | [Preencher papel] |
 | [Jorge Siqueira Serrão] | `[Jorge-Siqueira-Serrao]` | [FullStack] |
