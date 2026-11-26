@@ -46,7 +46,7 @@ inline bool lerId(const httplib::Request& req, httplib::Response& res, long long
         const std::string& texto = req.path_params.at("id");
         std::size_t usados = 0;
         id = std::stoll(texto, &usados);
-        if (usados == texto.size() && id > 0) {
+        if (usados == texto.size() && id > 0 && id <= 4294967295LL) {
             return true;
         }
     } catch (const std::exception&) {
