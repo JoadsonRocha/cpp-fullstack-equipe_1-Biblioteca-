@@ -10,12 +10,90 @@
 |---|---|---|---|
 | **0:00 – 2:30** | Integrante 1 | **Visão geral, Docker e Banco** | Problema (gestão de livros e autores), arquitetura, `Dockerfile` / `docker-compose.yml` e `schema.sql` (PK, FK `ON DELETE RESTRICT`, `UNIQUE`, `CHECK`). |
 | **2:30 – 5:30** | Integrante 2 | **Back-end C++ e Rotas** | Organização em camadas (`main.cpp` → `rotas_*` → `validacao.hpp` → `*_repositorio` → `banco.cpp`), RAII e parametrização `?`. |
-| **5:30 – 9:00** | Integrante 3 | **Demonstração ao vivo** | Fluxo completo no navegador (`http://localhost:8080`): listar, buscar/filtrar, criar, editar, excluir, painel de resumo e tratamento de erros (`422` e `409`). |
-| **9:00 – 11:00** | Integrante 4 | **Front-end, extras e decisões** | Como `config.js` / `app.js` / `resumo.js` funcionam, extras implementados, decisões técnicas e abertura para perguntas. |
+| **5:30 – 9:00** | Integrante 3 | **Demonstração ao vivo** | Fluxo completo no navegador (`http://localhost:8080`): listar, buscar/filtrar, criar, editar, excluir, painel de resumo, `API Docs` e tratamento de erros (`422` e `409`). |
+| **9:00 – 11:00** | Integrante 4 | **Front-end, extras e decisões** | Como `config.js` / `app.js` / `resumo.js` / `api.js` funcionam, extras implementados, decisões técnicas e abertura para perguntas. |
 
 ---
 
-## 2. Slide 1 — Problema e Arquitetura (0:00 – 2:30)
+## 2. Roteiro Falado (Falas Prontas para Ensaio)
+
+### 👤 Integrante 1: Visão Geral, Arquitetura e Banco (0:00 – 2:30)
+*(Tom: Apresentador, claro e objetivo)*
+
+> "Bom dia/boa tarde, professor(a) e colegas. Nós somos a **Equipe 1** e vamos apresentar nosso Projeto Final: o **Sistema de Gestão de Biblioteca**.
+>
+> O problema que resolvemos é a necessidade de um sistema leve e robusto para cadastrar livros e autores, controlar o estoque de exemplares, alertar visualmente sobre títulos esgotados e fornecer estatísticas rápidas do acervo.
+>
+> Nossa arquitetura segue um modelo de **3 camadas**:
+> - No topo, o **Front-end**, feito com HTML, CSS e JavaScript puro, que se comunica via `fetch` e JSON.
+> - No meio, a **API REST em C++17**, utilizando as bibliotecas `cpp-httplib` e `nlohmann/json`.
+> - Na base, o **Banco de Dados MariaDB**, rodando em container Docker.
+>
+> Falando no banco de dados, nosso `schema.sql` garante a integridade dos dados. Temos a tabela `autores` com `nome` `UNIQUE`, e a tabela `livros` com regras rígidas: `autor_id` é uma chave estrangeira com `ON DELETE RESTRICT` (impedindo a exclusão de autores com livros), `isbn` é único, e usamos `CHECK` para garantir que o ano de publicação seja real (`1000` a `2100`) e que os exemplares nunca sejam negativos.
+>
+> Para facilitar a execução, utilizamos **Docker**. O comando `docker compose up -d --wait` sobe apenas o banco com dados de teste, enquanto o perfil `fullstack` compila e sobe a API C++ e o front-end na porta `8080` prontos para uso.
+>
+> Agora, o **[Nome do Integrante 2]** vai detalhar como o back-end foi construído."
+
+### 👤 Integrante 2: Back-end C++17, Camadas e Rotas (2:30 – 5:30)
+*(Tom: Técnico, destacando boas práticas de programação)*
+
+> "Obrigado. Nosso back-end em C++17 foi desenhado com forte separação de responsabilidades.
+>
+> No `main.cpp`, carregamos as configurações, testamos a conexão e registramos as rotas. As requisições chegam nos arquivos `rotas_livros.cpp` e `rotas_autores.cpp`, que fazem o parse do JSON e delegam a validação para o `validacao.hpp`. Se tudo estiver certo, chamam os repositórios.
+>
+> Um ponto crucial do nosso projeto é o uso de **RAII** (Aquisição de Recursos é Inicialização). No arquivo `banco.cpp`, encapsulamos os ponteiros brutos da API C do MariaDB (`MYSQL*` e `MYSQL_STMT*`) dentro das classes `Conexao` e `Instrucao`. Isso garante que, mesmo que ocorra uma exceção, o destrutor será chamado e a conexão com o banco será fechada automaticamente, evitando *memory leaks*.
+>
+> Além disso, **100% das nossas consultas SQL usam parâmetros `?`** (*Prepared Statements*). Isso elimina totalmente o risco de SQL Injection, pois os dados do usuário nunca são concatenados na string da query.
+>
+> Sobre as rotas, cobrimos todo o ciclo CRUD para autores e livros, retornando os códigos HTTP corretos:
+> - **200 e 201** para sucesso e criação.
+> - **204** para exclusão concluída.
+> - **400** para requisições malformadas ou IDs inválidos.
+> - **404** quando um ID não é encontrado.
+> - **409** para conflitos com mensagem clara ao usuário, como tentar deletar um autor que possui livros ou cadastrar um ISBN duplicado.
+> - E **422** para erros de validação de campos, retornando um array detalhado do que está errado.
+>
+> Também implementamos rotas extras, como `/api/livros/resumo` para estatísticas e `/api/autores/:id/livros` para filtrar obras por autor.
+>
+> Agora, o **[Nome do Integrante 3]** fará a demonstração prática do sistema."
+
+### 👤 Integrante 3: Demonstração ao Vivo (5:30 – 9:00)
+*(Tom: Dinâmico, narrando as ações enquanto mexe no mouse. Pratique isso antes!)*
+
+> "Vamos à demonstração ao vivo no `localhost:8080`.
+>
+> **Listagem e Filtros:** Na tela inicial, vemos a lista de livros. Notem que a tabela já faz o `JOIN` e exibe o nome do autor, não apenas o ID. Livros com zero exemplares, como este aqui, ficam destacados em vermelho. Vou usar a busca rápida digitando `'Machado'` e o filtro por autor para mostrar a reatividade da tela.
+>
+> **Validação (Erro 422):** Vou clicar em **`+ Novo livro`** para abrir o modal e tentar cadastrar um livro sem título e com o ano `'3000'`. Ao clicar em **Salvar**, o sistema bloqueia e exibe no topo do modal as mensagens de erro detalhadas *(dica: na aba **API Docs**, também dá para clicar no atalho **"Ano 3000 (422)"** para mostrar a resposta JSON direta da API)*.
+>
+> **Fluxo de Criação e Edição:** Vou na aba **Autores**, clico em **`+ Novo autor`** e cadastro `'Jorge Amado'`, nacionalidade `'Brasileira'`. Voltando aos livros, abro **`+ Novo livro`**, seleciono `'Jorge Amado'` no `select` e crio o livro `'Capitães da Areia'` com `0` exemplares. Vejam que ele já aparece destacado em vermelho na tabela. Agora, vou clicar em **Editar** e alterar o estoque para `4` exemplares. A linha perde o destaque vermelho imediatamente.
+>
+> **Regra de Negócio (Erro 409):** Se eu for em **Autores** e tentar excluir `'Jorge Amado'` agora, o sistema exibe um erro `409` explicando que não é possível excluir o autor porque ele ainda possui livros cadastrados. Isso porque o banco de dados está protegido pela regra `ON DELETE RESTRICT`.
+>
+> **Exclusão (204):** Para resolver, vou excluir primeiro o livro `'Capitães da Areia'`. O sistema pede confirmação e o remove. Agora, sim, consigo excluir o autor `'Jorge Amado'` com sucesso.
+>
+> **Painel de Resumo e API Docs:** Por fim, na aba **Resumo**, consumimos a rota `/api/livros/resumo` que exibe o total de títulos, exemplares, autores e gráficos de distribuição por gênero e autor — e na aba **API Docs**, temos uma documentação interativa onde qualquer pessoa pode testar todas as 14 rotas ao vivo.
+>
+> Agora, o **[Nome do Integrante 4]** vai falar sobre as decisões técnicas do front-end e encerrar."
+
+### 👤 Integrante 4: Front-end, Decisões Técnicas e Encerramento (9:00 – 11:00)
+*(Tom: Analítico, mostrando maturidade nas escolhas de design)*
+
+> "Para finalizar, gostaria de destacar algumas decisões técnicas que elevaram a qualidade do projeto.
+>
+> No **Front-end**, optamos por JavaScript puro (*Vanilla JS*) para manter a leveza. Usamos arquivos `config.js` e `config-autores.js` para centralizar a geração de formulários e tabelas no `app.js`, evitando duplicação de código entre as páginas de livros e autores. No `resumo.js` e no `api.js`, manipulamos o DOM usando estritamente `textContent` em vez de `innerHTML`, o que é uma prática essencial de segurança para prevenir ataques de **XSS** (*Cross-Site Scripting*). Também criamos a tela **API Docs** (`api.html`) para facilitar testes ao vivo e aprendizado da API.
+>
+> Três decisões de **back-end** merecem destaque:
+> 1. **Uso de `NULLIF(?, '')` no SQL:** Como o ISBN é opcional e `UNIQUE`, se salvássemos uma string vazia `""`, o segundo livro sem ISBN daria erro de duplicidade. O `NULLIF` converte strings vazias em `NULL`, e o banco permite múltiplos `NULL`s em colunas únicas.
+> 2. **Validação prévia do `autor_id`:** Antes de tentar inserir o livro, verificamos se o autor existe. Se não existir, retornamos um `422` com a mensagem amigável `'autor_id nao existe'`, em vez de deixar o banco estourar um erro genérico `1452`.
+> 3. **Ordem de registro das rotas:** No `cpp-httplib`, registramos a rota `/api/livros/resumo` **antes** da rota `/api/livros/:id`. Se fizéssemos o contrário, o framework interpretaria a palavra `'resumo'` como se fosse um ID de livro, gerando um erro `400`.
+>
+> Muito obrigado pela atenção, e ficamos à disposição para as perguntas da banca."
+
+---
+
+## 3. Resumo Técnico — Problema e Arquitetura (0:00 – 2:30)
 
 ### O que o sistema resolve
 Sistema para uma biblioteca cadastrar **livros** e **autores**, controlar a quantidade de **exemplares**, destacar títulos esgotados (`exemplares = 0`), filtrar rapidamente o acervo e visualizar estatísticas em um painel de resumo.
@@ -40,7 +118,7 @@ Banco de dados MariaDB (Docker)
 
 ---
 
-## 3. Slide 2 — Back-end em C++17 e Rotas da API (2:30 – 5:30)
+## 4. Slide 2 — Back-end em C++17 e Rotas da API (2:30 – 5:30)
 
 ### Separação de responsabilidades (`src/`)
 - **`main.cpp`:** carrega configurações de ambiente (`Config::doAmbiente()`), testa o banco, serve `./public` em `/`, registra rotas e define handlers globais de erro (`500` para exceções e `404` JSON para rotas `/api/*` inexistentes).
@@ -71,7 +149,7 @@ Banco de dados MariaDB (Docker)
 
 ---
 
-## 4. Slide 3 — Caminho de uma requisição `POST /api/livros` (ponta a ponta)
+## 5. Slide 3 — Caminho de uma requisição `POST /api/livros` (ponta a ponta)
 
 1. **Tela (`public/app.js` + `public/config.js`):** o usuário preenche o formulário e clica em **Salvar**. `lerFormulario()` monta o objeto JSON e `api("POST", "/api/livros", dados)` envia via `fetch()`.
 2. **Rota (`src/rotas_livros.cpp`):**
@@ -83,7 +161,7 @@ Banco de dados MariaDB (Docker)
 
 ---
 
-## 5. Slide 4 — Roteiro da Demonstração ao Vivo (5:30 – 9:00)
+## 6. Slide 4 — Roteiro da Demonstração ao Vivo (5:30 – 9:00)
 
 Acesse **<http://localhost:8080>** e execute nesta ordem:
 
@@ -105,12 +183,13 @@ Acesse **<http://localhost:8080>** e execute nesta ordem:
 
 ---
 
-## 6. Slide 5 — Front-end, Decisões Técnicas e Extras (9:00 – 11:00)
+## 7. Slide 5 — Front-end, Decisões Técnicas e Extras (9:00 – 11:00)
 
 ### Front-end (`public/`)
-- `app.js` lê `CONFIG` de `config.js` (Livros) e `config-autores.js` (Autores) para gerar formulário, validações básicas, busca, filtros e tabela sem duplicar código.
+- `app.js` lê `CONFIG` de `config.js` (Livros) e `config-autores.js` (Autores) para gerar formulário em modal (`+ Novo livro` / `+ Novo autor`), validações básicas, busca, filtros e tabela sem duplicar código.
 - `resumo.js` consome `GET /api/livros/resumo` e preenche o painel com `textContent` (prevenindo XSS).
-- `estilo.css` garante leitura responsiva em telas estreitas e destaque visual (`linha-alerta`) para livros com `exemplares = 0`.
+- `api.html` + `api.js` oferecem documentação interativa dentro do próprio site para copiar `curl` e testar todas as 14 rotas ao vivo.
+- `estilo.css` garante leitura responsiva em telas estreitas, favicon (`favicon.svg`) e destaque visual (`linha-alerta`) para livros com `exemplares = 0`.
 
 ### Principais decisões e aprendizados
 - **`NULLIF(?, '')` para opcionais:** evita que livros sem ISBN sejam gravados como string vazia `""`, permitindo múltiplos livros sem ISBN sem violar o índice `UNIQUE`.
@@ -120,7 +199,7 @@ Acesse **<http://localhost:8080>** e execute nesta ordem:
 
 ---
 
-## 7. Guia rápido para perguntas da banca (`rubrica.md`)
+## 8. Guia rápido para perguntas da banca (`rubrica.md`)
 
 <details>
 <summary><strong>Clique para ver respostas prontas para as perguntas típicas do professor</strong></summary>
