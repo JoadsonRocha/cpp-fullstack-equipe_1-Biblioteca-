@@ -17,6 +17,8 @@
 | Joadson Rocha | `JoadsonRocha` | [FullStack] |
 | Preencher nome | `[Preencher usuário]` | [Preencher papel] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
+| Eduardo Felipe | `[Preencher usuário]` | [Preencher papel] |
+| [Jorge Siqueira Serrão] | `[Jorge-Siqueira-Serrao]` | [FullStack] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 
 ## Como executar (do zero, em outro computador)
