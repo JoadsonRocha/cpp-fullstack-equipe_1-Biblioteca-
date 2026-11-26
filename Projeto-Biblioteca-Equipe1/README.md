@@ -91,6 +91,13 @@ Acesse **<http://localhost:8080>** no navegador. O container `db` inicializa o b
 
 > **Dica:** para zerar o banco e reexecutar o `schema.sql` do zero: `docker compose --profile fullstack down -v` e suba novamente. Apenas um serviço MariaDB por vez pode usar a porta `3306`.
 
+### Testes automatizados da rubrica (1 clique)
+
+Para validar automaticamente compilação, auditoria SQL/RAII, saúde da API, CRUD completo, códigos de erro (`400`, `404`, `409`, `422`), `NULLIF`, filtros, `ON DELETE RESTRICT` e rotas extras:
+
+- **Windows (1 clique):** dê um clique duplo em [`testar-professor.bat`](testar-professor.bat) (ou execute `.\testar-professor.bat --reset` para recriar o banco do zero antes dos testes).
+- **Linux / macOS / MSYS2:** `./testar-professor.sh` (ou `./testar-professor.sh --reset`).
+
 ### Variáveis de ambiente (opcional)
 
 | Variável | Padrão | Descrição |
@@ -216,6 +223,7 @@ Projeto-Biblioteca-Equipe1/
 ├── docker-compose.yml            MariaDB + perfil fullstack (db + api) + adminer
 ├── schema.sql                    tabelas autores e livros + dados de exemplo
 ├── build.sh / build.bat          scripts de compilação local
+├── testar-professor.bat/.ps1/.sh bateria automatizada da rubrica em 1 clique
 ├── libs/                         cpp-httplib e nlohmann/json
 ├── src/
 │   ├── main.cpp                  inicialização, arquivos estáticos e rotas
