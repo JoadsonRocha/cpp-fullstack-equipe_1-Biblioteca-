@@ -15,7 +15,7 @@
 | Nome | Usuário no GitHub | Papel principal (pode revezar) |
 |------|-------------------|--------------------------------|
 | Joadson Rocha | `JoadsonRocha` | [FullStack] |
-| Eduardo Felipe | `[Preencher usuário]` | [Preencher papel] |
+| Preencher nome | `[Preencher usuário]` | [Preencher papel] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
 
