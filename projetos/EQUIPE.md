@@ -16,7 +16,7 @@
 |------|-------------------|--------------------------------|
 | Joadson Rocha | `JoadsonRocha` | [FullStack] |
 | Abel Benicio | `AbelBenicioDev` | [Fullstack] |
-| [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
+| Yuri Gabriel Porto Corrêa | `YuriMenandro` | [FullStack] |
 | Eduardo Felipe | `LipehSanttos` | [FullStack] |
 | [Jorge Siqueira Serrão] | `[Jorge-Siqueira-Serrao]` | [FullStack] |
 | [Preencher nome] | `[Preencher usuário]` | [Preencher papel] |
