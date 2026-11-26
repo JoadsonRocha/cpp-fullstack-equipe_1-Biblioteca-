@@ -1,4 +1,4 @@
-param(
+﻿param(
     [switch]$ResetBanco,
     [switch]$ComBuildLocal
 )
@@ -52,7 +52,7 @@ function Chamar-Api {
     param(
         [string]$Metodo,
         [string]$Caminho,
-        [string]$CorpoJson = $null
+        [string]$CorpoJson = ""
     )
 
     $url = "$BaseUrl$Caminho"
@@ -61,7 +61,7 @@ function Chamar-Api {
     $req.Timeout = 10000
     $req.Accept = "application/json, text/html, */*"
 
-    if ($null -ne $CorpoJson) {
+    if (($Metodo -eq "POST" -or $Metodo -eq "PUT" -or $Metodo -eq "PATCH") -and -not [string]::IsNullOrEmpty($CorpoJson)) {
         $bytes = [System.Text.Encoding]::UTF8.GetBytes($CorpoJson)
         $req.ContentType = "application/json; charset=utf-8"
         $req.ContentLength = $bytes.Length
@@ -242,17 +242,19 @@ try {
 
     $rAutores = Chamar-Api -Metodo "GET" -Caminho "/api/autores"
     if (Verificar-Status "GET /api/autores (seed inicial)" $rAutores 200) {
-        if ($rAutores.Json.Count -ge 5) {
-            Registrar-Pass "Seed inicial de autores presente ($($rAutores.Json.Count) autores)"
+        $qtdAutores = @($rAutores.Json).Count
+        if ($qtdAutores -ge 5) {
+            Registrar-Pass "Seed inicial de autores presente ($qtdAutores autores)"
         } else {
-            Registrar-Fail "Esperado ao menos 5 autores iniciais" "encontrado $($rAutores.Json.Count)"
+            Registrar-Fail "Esperado ao menos 5 autores iniciais" "encontrado $qtdAutores"
         }
     }
 
     $rLivros = Chamar-Api -Metodo "GET" -Caminho "/api/livros"
     if (Verificar-Status "GET /api/livros (seed inicial + JOIN)" $rLivros 200) {
-        if ($rLivros.Json.Count -ge 10 -and $rLivros.Json[0].autor_nome) {
-            Registrar-Pass "Seed de livros presente com autor_nome via JOIN ($($rLivros.Json.Count) livros)"
+        $listaLivros = @($rLivros.Json)
+        if ($listaLivros.Count -ge 10 -and $listaLivros[0].autor_nome) {
+            Registrar-Pass "Seed de livros presente com autor_nome via JOIN ($($listaLivros.Count) livros)"
         } else {
             Registrar-Fail "Esperado >= 10 livros com autor_nome" $rLivros.Body
         }
@@ -416,8 +418,9 @@ try {
     Escrever-Titulo "7. Busca, Filtros e Rotas Extras"
     $r = Chamar-Api -Metodo "GET" -Caminho "/api/livros?busca=Machado"
     if (Verificar-Status "GET /api/livros?busca=Machado -> 200" $r 200) {
-        if ($r.Json.Count -ge 1) {
-            Registrar-Pass "Busca por 'Machado' retornou $($r.Json.Count) registro(s)"
+        $achados = @($r.Json).Count
+        if ($achados -ge 1) {
+            Registrar-Pass "Busca por 'Machado' retornou $achados registro(s)"
         } else {
             Registrar-Fail "Busca por 'Machado' veio vazia"
         }
@@ -425,10 +428,11 @@ try {
 
     $r = Chamar-Api -Metodo "GET" -Caminho "/api/livros?genero=Romance&autor_id=$($Script:AutorCriadoId)"
     if (Verificar-Status "GET /api/livros?genero=Romance&autor_id=:id -> 200" $r 200) {
-        if ($r.Json.Count -eq 1) {
+        $filtrados = @($r.Json).Count
+        if ($filtrados -eq 1) {
             Registrar-Pass "Filtro combinado genero + autor_id retornou exatamente 1 livro"
         } else {
-            Registrar-Fail "Esperado 1 livro no filtro combinado" "recebeu $($r.Json.Count)"
+            Registrar-Fail "Esperado 1 livro no filtro combinado" "recebeu $filtrados"
         }
     }
 
@@ -437,17 +441,18 @@ try {
 
     $r = Chamar-Api -Metodo "GET" -Caminho "/api/autores/$($Script:AutorCriadoId)/livros"
     if (Verificar-Status "GET /api/autores/:id/livros -> 200" $r 200) {
-        if ($r.Json.Count -eq 3) {
+        $doAutor = @($r.Json).Count
+        if ($doAutor -eq 3) {
             Registrar-Pass "Rota extra listou os 3 livros vinculados ao autor"
         } else {
-            Registrar-Fail "Esperado 3 livros do autor" "recebeu $($r.Json.Count)"
+            Registrar-Fail "Esperado 3 livros do autor" "recebeu $doAutor"
         }
     }
 
     $r = Chamar-Api -Metodo "GET" -Caminho "/api/livros/resumo"
     if (Verificar-Status "GET /api/livros/resumo -> 200" $r 200) {
-        if ($null -ne $r.Json.totais -and $null -ne $r.Json.por_genero -and $null -ne $r.Json.por_autor) {
-            Registrar-Pass "Resumo contem totais, por_genero e por_autor"
+        if ($null -ne $r.Json.total_livros -and $null -ne $r.Json.total_exemplares -and $null -ne $r.Json.total_autores -and $null -ne $r.Json.esgotados -and $null -ne $r.Json.por_genero -and $null -ne $r.Json.por_autor) {
+            Registrar-Pass "Resumo contem total_livros, total_exemplares, total_autores, esgotados, por_genero e por_autor"
         } else {
             Registrar-Fail "Estrutura de /api/livros/resumo incompleta" $r.Body
         }

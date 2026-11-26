@@ -74,7 +74,7 @@ extrair_id() {
 }
 
 limpar() {
-  for lid in "${LIVRO_IDS[@]:-}"; do
+  for lid in ${LIVRO_IDS[@]+"${LIVRO_IDS[@]}"}; do
     [[ -n "$lid" ]] && curl -sS -o /dev/null -X DELETE "$BASE_URL/api/livros/$lid" || true
   done
   if [[ -n "$AUTOR_ID" ]]; then
@@ -242,8 +242,8 @@ check_status "GET /api/autores/:id/livros -> 200" 200 || true
 
 api_call GET "/api/livros/resumo"
 if check_status "GET /api/livros/resumo -> 200" 200; then
-  if printf '%s' "$API_BODY" | grep -q '"totais"' && printf '%s' "$API_BODY" | grep -q '"por_genero"'; then
-    pass "Resumo contem totais e por_genero"
+  if printf '%s' "$API_BODY" | grep -q '"total_livros"' && printf '%s' "$API_BODY" | grep -q '"por_genero"' && printf '%s' "$API_BODY" | grep -q '"por_autor"'; then
+    pass "Resumo contem total_livros, por_genero e por_autor"
   else
     fail "Estrutura de resumo incompleta" "$API_BODY"
   fi
@@ -255,13 +255,17 @@ api_call DELETE "/api/autores/$AUTOR_ID"
 check_status "DELETE /api/autores/:id com livros -> 409" 409 || true
 
 NOVOS_IDS=()
-for lid in "${LIVRO_IDS[@]}"; do
+for lid in ${LIVRO_IDS[@]+"${LIVRO_IDS[@]}"}; do
   api_call DELETE "/api/livros/$lid"
   if ! check_status "DELETE /api/livros/$lid -> 204" 204; then
     NOVOS_IDS+=("$lid")
   fi
 done
-LIVRO_IDS=("${NOVOS_IDS[@]:-}")
+if [[ ${#NOVOS_IDS[@]} -gt 0 ]]; then
+  LIVRO_IDS=("${NOVOS_IDS[@]}")
+else
+  LIVRO_IDS=()
+fi
 
 api_call GET "/api/livros/$LIVRO1_ID"
 check_status "GET livro excluido -> 404" 404 || true
