@@ -15,6 +15,19 @@ const char* const kSelect =
     "l.ano_publicacao, l.isbn, l.exemplares, l.criado_em "
     "FROM livros l JOIN autores a ON a.id = l.autor_id ";
 
+const char* resolverOrdenacao(const std::string& ordenar) {
+    if (ordenar == "titulo") {
+        return "ORDER BY l.titulo ASC, l.id DESC";
+    }
+    if (ordenar == "ano") {
+        return "ORDER BY l.ano_publicacao DESC, l.titulo ASC";
+    }
+    if (ordenar == "exemplares") {
+        return "ORDER BY l.exemplares DESC, l.titulo ASC";
+    }
+    return "ORDER BY l.id DESC";
+}
+
 }  // namespace
 
 json LivroRepositorio::listar(const FiltrosLivro& filtros) {
@@ -36,12 +49,16 @@ json LivroRepositorio::listar(const FiltrosLivro& filtros) {
         condicoes.push_back("l.autor_id = ?");
         valores.push_back(filtros.autorId);
     }
+    if (filtros.apenasDisponiveis) {
+        condicoes.push_back("l.exemplares > 0");
+    }
 
     std::string sql = kSelect;
     for (std::size_t i = 0; i < condicoes.size(); ++i) {
         sql += (i == 0 ? "WHERE " : "AND ") + condicoes[i] + " ";
     }
-    return banco_.consultar(sql + "ORDER BY l.id DESC", valores);
+    return banco_.consultar(sql + resolverOrdenacao(filtros.ordenar), valores);
+
 }
 
 json LivroRepositorio::listarPorAutor(long long autorId) {

@@ -8,9 +8,11 @@
 #include "banco.hpp"
 
 struct FiltrosLivro {
-    std::string busca;    // procura em título, gênero, ISBN ou nome do autor
-    std::string genero;   // filtro exato por gênero
-    std::string autorId;  // filtro por id do autor
+    std::string busca;
+    std::string genero;
+    std::string autorId;
+    bool apenasDisponiveis = false;
+    std::string ordenar;
 };
 
 class LivroRepositorio {

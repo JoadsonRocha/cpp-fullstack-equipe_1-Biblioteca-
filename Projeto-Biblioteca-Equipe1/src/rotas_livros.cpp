@@ -26,7 +26,7 @@ json validarLivro(const json& dados) {
     return erros;
 }
 
-// Extrai e valida os filtros opcionais da URL (?busca=...&genero=...&autor_id=...).
+// Extrai e valida os filtros opcionais da URL (?busca=...&genero=...&autor_id=...&disponiveis=1&ordenar=...).
 FiltrosLivro lerFiltros(const httplib::Request& req, json& erros) {
     FiltrosLivro filtros;
     filtros.busca = req.get_param_value("busca");
@@ -43,6 +43,25 @@ FiltrosLivro lerFiltros(const httplib::Request& req, json& erros) {
             filtros.autorId = std::to_string(recebido["autor_id"].get<long long>());
         }
     }
+
+    if (req.has_param("disponiveis") && !req.get_param_value("disponiveis").empty()) {
+        const std::string disp = req.get_param_value("disponiveis");
+        if (disp == "1" || disp == "true") {
+            filtros.apenasDisponiveis = true;
+        } else if (disp != "0" && disp != "false") {
+            erros.push_back("disponiveis deve ser 1 ou 0");
+        }
+    }
+
+    if (req.has_param("ordenar") && !req.get_param_value("ordenar").empty()) {
+        const std::string ord = req.get_param_value("ordenar");
+        if (ord == "recentes" || ord == "titulo" || ord == "ano" || ord == "exemplares") {
+            filtros.ordenar = ord;
+        } else {
+            erros.push_back("ordenar deve ser recentes, titulo, ano ou exemplares");
+        }
+    }
+
     return filtros;
 }
 
