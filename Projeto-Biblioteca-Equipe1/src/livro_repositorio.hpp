@@ -37,6 +37,8 @@ public:
     // Atualiza o livro com o id informado. Devolve o livro atualizado, ou null se não existir.
     nlohmann::json atualizar(long long id, const nlohmann::json& dados);
 
+    nlohmann::json listarEsgotados();
+
     // Remove o livro. Devolve true se existia, false se não existir.
     bool remover(long long id);
 

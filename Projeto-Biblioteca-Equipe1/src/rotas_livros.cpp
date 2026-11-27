@@ -109,6 +109,13 @@ void registrarRotasLivros(httplib::Server& servidor, const Config& config) {
         });
     });
 
+    servidor.Get("/api/livros/esgotados", [&config](const httplib::Request&, httplib::Response& res) {
+        util::comBanco(config, res, [&](Conexao& banco) {
+            LivroRepositorio repositorio(banco);
+            util::enviarJson(res, repositorio.listarEsgotados());
+        });
+    });
+
     // BUSCAR UM: retorna o livro com autor_nome, 400 se ID inválido ou 404 se inexistente.
     servidor.Get("/api/livros/:id", [&config](const httplib::Request& req, httplib::Response& res) {
         long long id = 0;

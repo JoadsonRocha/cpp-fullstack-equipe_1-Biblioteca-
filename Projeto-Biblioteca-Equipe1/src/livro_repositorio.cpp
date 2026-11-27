@@ -66,6 +66,10 @@ json LivroRepositorio::listarPorAutor(long long autorId) {
                             {std::to_string(autorId)});
 }
 
+json LivroRepositorio::listarEsgotados() {
+    return banco_.consultar(std::string(kSelect) + "WHERE l.exemplares = 0 ORDER BY l.titulo");
+}
+
 json LivroRepositorio::resumo() {
     // COALESCE garante 0 em vez de NULL caso a tabela ainda esteja vazia.
     json totais = banco_
